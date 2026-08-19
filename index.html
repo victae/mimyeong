@@ -80,20 +80,28 @@
 <body class="min-h-screen flex flex-col justify-between overflow-hidden antialiased">
 
   <!-- 상단 헤더 -->
-  <header class="w-full bg-cardDark/80 backdrop-blur-md border-b border-accentNavy/40 px-4 py-3 flex items-center justify-between z-30">
-    <div class="flex items-center space-x-3">
+  <header class="w-full bg-cardDark/80 backdrop-blur-md border-b border-accentNavy/40 px-4 py-2.5 flex items-center justify-between z-30">
+    <div class="flex items-center space-x-3 flex-1 min-w-0 mr-2">
       <!-- 헤더 앱 로고 아이콘 -->
-      <img id="church-logo" src="./icon_prayer.png" alt="미명" class="h-8 w-8 rounded-lg object-cover shadow-sm border border-tealAccent/30" onError="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
-      <div id="logo-fallback" class="hidden text-tealAccent font-bold text-lg tracking-wider">
+      <img id="church-logo" src="./icon_prayer.png" alt="미명" class="h-9 w-9 rounded-lg object-cover shadow-sm border border-tealAccent/30 flex-shrink-0" onError="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+      <div id="logo-fallback" class="hidden text-tealAccent font-bold text-lg tracking-wider flex-shrink-0">
         동성교회
       </div>
-      <div class="border-l border-accentNavy/60 pl-3">
-        <h1 class="text-lg font-bold text-brightAqua leading-none tracking-wide">미명 <span class="text-xs font-normal text-tealAccent/80">(未明)</span></h1>
-        <p class="text-[10px] text-textLight/60 tracking-tight">새벽을 깨우는 중보기도</p>
+      
+      <!-- 헤더 타이틀 및 랜덤 성경구절 영역 -->
+      <div class="border-l border-accentNavy/60 pl-3 flex-1 min-w-0">
+        <div class="flex items-baseline space-x-1.5">
+          <h1 class="text-base font-bold text-brightAqua leading-none tracking-wide">미명</h1>
+          <span class="text-[11px] font-normal text-tealAccent/80">(未明)</span>
+        </div>
+        <!-- 기도 카드 전환 시 랜덤으로 바뀌는 말씀 영역 -->
+        <p id="header-bible-verse" class="text-[11px] text-textLight/70 tracking-tight truncate mt-0.5 transition-opacity duration-500 font-light">
+          새벽 아직도 밝기 전에 예수께서 한적한 곳으로 가사 기도하시더니 (막 1:35)
+        </p>
       </div>
     </div>
 
-    <div class="flex items-center space-x-2">
+    <div class="flex items-center space-x-2 flex-shrink-0">
       <!-- 교역자 선택 버튼 -->
       <button id="btn-open-settings" class="px-2.5 py-1.5 rounded-lg bg-accentNavy/50 hover:bg-accentNavy text-xs text-textLight flex items-center space-x-1.5 transition">
         <i class="fa-solid fa-sliders text-tealAccent"></i>
@@ -252,7 +260,7 @@
         </div>
       </div>
 
-      <!-- 구글 연동 URL 직접 입력/수정 칸 -->
+      <!-- 구글 연동 URL 직접 입력 칸 -->
       <div class="space-y-2 pt-2 border-t border-accentNavy/40">
         <label class="text-xs font-semibold text-tealAccent block">구글 연동 Web App URL</label>
         <input id="input-api-url" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-bgDark border border-accentNavy rounded-xl px-3 py-2 text-xs text-textLight focus:outline-none focus:border-tealAccent">
@@ -267,8 +275,61 @@
 
   <!-- JavaScript 로직 -->
   <script>
-    // ★★★ 복사해 둔 Google Apps Script Web App URL을 따옴표 안에 넣어주세요 ★★★
-    const DEFAULT_API_URL = "여기에_Apps_Script_URL_붙여넣기";
+    const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec";
+
+// 새벽 기도와 중보에 힘을 주는 성경 구절 (50편)
+    const BIBLE_VERSES = [
+      "새벽 아직도 밝기 전에 예수께서 일어나 나가 한적한 곳으로 가사 거기서 기도하시더니 (막 1:35)",
+      "여호와여 아침에 주께서 나의 소리를 들으시리니 아침에 내가 주께 기도하고 바라리이다 (시 5:3)",
+      "아무 것도 염려하지 말고 다만 모든 일에 기도와 간구로 하나님께 아뢰라 (빌 4:6)",
+      "너는 내게 부르짖으라 내가 네게 응답하겠고 크고 은밀한 일을 네게 보이리라 (렘 33:3)",
+      "의인의 간구는 역사하는 힘이 큼이니라 (약 5:16)",
+      "하나님이 그 성중에 계시매 흔들리지 아니할 것이라 새벽에 하나님이 도우시리로다 (시 46:5)",
+      "구하라 그리하면 너희에게 주실 것이요 찾으라 찾아낼 것이요 문을 두드리라 열릴 것이니 (마 7:7)",
+      "너희가 내 안에 거하고 내 말이 너희 안에 거하면 무엇이든지 원하는 대로 구하라 이루리라 (요 15:7)",
+      "아침에 나로 하여금 주의 인자한 말씀을 듣게 하소서 내가 주를 의뢰함이니이다 (시 143:8)",
+      "모든 기도와 간구를 하되 항상 성령 안에서 기도하고 깨어 구하기를 힘쓰라 (엡 6:18)",
+      "내 영광아 깰지어다 비파야, 수금아, 깰지어다 내가 새벽을 깨우리로다 (시 57:8)",
+      "무엇이든지 기도하고 구하는 것은 받은 줄로 믿으라 그리하면 너희에게 그대로 되리라 (막 11:24)",
+      "우리는 때를 따라 돕는 은혜를 얻기 위하여 은혜의 보좌 앞에 담대히 나아갈 것이니라 (히 4:16)",
+      "백성들아 시시로 그를 의지하고 그의 앞에 마음을 토하라 하나님은 우리의 피난처시로다 (시 62:8)",
+      "성령도 우리의 연약함을 도우시나니 말할 수 없는 탄식으로 친히 간구하시느니라 (롬 8:26)",
+      "두세 사람이 내 이름으로 모인 곳에는 나도 그들 중에 있느니라 (마 18:20)",
+      "야고보가 기도한즉 하늘이 비를 주고 땅이 열매를 맺었느니라 (약 5:18)",
+      "너희 중에 누구든지 지혜가 부족하거든 모든 사람에게 후히 주시는 하나님께 구하라 (약 1:5)",
+      "주의 말씀은 내 발에 등이요 내 길에 빛이니이다 (시 119:105)",
+      "내 이름으로 일컫는 내 백성이 기도하여 내 얼굴을 찾으면 내가 그들의 죄를 사하리라 (대하 7:14)",
+      "쉬지 말고 기도하라 범사에 감사하라 이것이 너희를 향하신 하나님의 뜻이니라 (살전 5:17-18)",
+      "주를 바라는 자들은 수치를 당하지 아니하리로다 (시 25:3)",
+      "환난 날에 나를 부르라 내가 너를 건지리니 네가 나를 영화롭게 하리로다 (시 50:15)",
+      "기도를 계속하고 기도에 감사함으로 깨어 있으라 (골 4:2)",
+      "내가 여호와를 기다리고 기다렸더니 귀를 기울이사 나의 부르짖음을 들으셨도다 (시 40:1)",
+      "여호와를 앙망하는 자는 새 힘을 얻으리니 독수리가 날개치며 올라감 같을 것이요 (사 40:31)",
+      "너희가 기도할 때에 무엇이든지 믿고 구하는 것은 다 받으리라 하시니라 (마 21:22)",
+      "나의 하나님이 그리스도 예수 안에서 영광 가운데 그 풍성한 대로 너희 모든 쓸 것을 채우시리라 (빌 4:19)",
+      "여호와는 나의 목자시니 내게 부족함이 없으리로다 (시 23:1)",
+      "두려워하지 말라 내가 너와 함께 함이라 놀라지 말라 나는 네 하나님이 됨이라 (사 41:10)",
+      "너는 마음을 다하여 여호와를 신뢰하고 네 명철을 의지하지 말라 (잠 3:5)",
+      "너의 길을 여호와께 맡기라 그를 의지하면 그가 이루시고 (시 37:5)",
+      "평안을 너희에게 끼치노니 곧 나의 평안을 너희에게 주노라 마음에 근심하지 말라 (요 14:27)",
+      "수고하고 무거운 짐 진 자들아 다 내게로 오라 내가 너희를 쉬게 하리라 (마 11:28)",
+      "사람이 마음으로 자기의 길을 계획할지라도 그의 걸음을 인도하시는 이는 여호와시니라 (잠 16:9)",
+      "하나님은 우리의 피난처시요 힘이시니 환난 중에 만날 큰 도움이시라 (시 46:1)",
+      "내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라 (빌 4:13)",
+      "주 여호와께서는 자기 백성의 부르짖음을 들으시고 그들의 모든 환난에서 건지셨도다 (시 34:17)",
+      "주의 인자하심이 아침마다 새롭고 웅대하시니이다 (애 3:23)",
+      "여호와는 네게 복을 주시고 너를 지키시기를 원하며 은혜 베푸시기를 원하노라 (민 6:24-25)",
+      "믿음의 기도는 병든 자를 구원하리니 주께서 그를 일으키시리라 (약 5:15)",
+      "오직 의인은 믿음으로 말미암아 살리라 (롬 1:17)",
+      "너희는 가만히 있어 내가 하나님 됨을 알지어다 (시 46:10)",
+      "주의 손이 나와 함께 하사 나로 환난을 벗어나 내게 근심이 없게 하옵소서 (대상 4:10)",
+      "여호와를 기뻐하라 그가 네 마음의 소원을 네게 이루어 주시리로다 (시 37:4)",
+      "우리가 알거니와 하나님을 사랑하는 자들에게는 모든 것이 합력하여 선을 이루느니라 (롬 8:28)",
+      "내가 새벽 날개를 치며 바다 끝에 가서 거주할지라도 주의 손이 나를 인도하시리이다 (시 139:9-10)",
+      "여호와는 나의 빛이요 나의 구원이시니 내가 누구를 두려워하리요 (시 27:1)",
+      "너희 염려를 다 주께 맡기라 이는 그가 너희를 돌보심이라 (벧전 5:7)",
+      "내 영혼아 여호와를 송축하라 내 속에 있는 것들아 다 그의 거룩한 이름을 송축하라 (시 103:1)"
+    ];
 
     const MOCK_DATA = {
       members: [
@@ -295,7 +356,7 @@
     function getTodayWeekday() {
       const day = new Date().getDay();
       if (day >= 1 && day <= 5) return day;
-      return 1; // 주말 접속 시 월요일 기본
+      return 1;
     }
 
     let state = {
@@ -322,11 +383,13 @@
     const elTimerDisplay = document.getElementById('timer-display');
     const elProgressBar = document.getElementById('timer-progress');
     const elHeaderUserInfo = document.getElementById('header-user-info');
+    const elBibleVerse = document.getElementById('header-bible-verse');
 
     async function initApp() {
       setupEventListeners();
       updateWeekdayUI();
       updateHeaderInfo();
+      updateRandomBibleVerse();
       
       if (state.apiUrl && state.apiUrl !== "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec") {
         await fetchDataFromGAS();
@@ -335,6 +398,17 @@
       }
       
       startTimer();
+    }
+
+    // 헤더 성경구절 랜덤 변경 (페이드 애니메이션)
+    function updateRandomBibleVerse() {
+      if (!elBibleVerse) return;
+      elBibleVerse.style.opacity = '0';
+      setTimeout(() => {
+        const randomIndex = Math.floor(Math.random() * BIBLE_VERSES.length);
+        elBibleVerse.textContent = BIBLE_VERSES[randomIndex];
+        elBibleVerse.style.opacity = '1';
+      }, 300);
     }
 
     function updateWeekdayUI() {
@@ -456,6 +530,7 @@
       state.currentIndex = (state.currentIndex + 1) % state.activeList.length;
       renderCard();
       resetTimer();
+      updateRandomBibleVerse(); // 다음 카드로 넘어갈 때 성경구절 랜덤 갱신
     }
 
     function prevCard() {
@@ -463,6 +538,7 @@
       state.currentIndex = (state.currentIndex - 1 + state.activeList.length) % state.activeList.length;
       renderCard();
       resetTimer();
+      updateRandomBibleVerse(); // 이전 카드로 갈 때도 성경구절 갱신
     }
 
     async function fetchDataFromGAS() {
@@ -556,11 +632,12 @@
       });
       targetBtn.className = 'flex-1 py-2 rounded-lg font-medium transition text-center text-brightAqua bg-accentNavy/80 shadow';
       filterDataByRotation();
+      updateRandomBibleVerse();
     }
 
     function openSettingsModal() {
       document.getElementById('modal-settings').classList.remove('hidden');
-      document.getElementById('input-api-url').value = state.apiUrl !== "여기에_Apps_Script_URL_붙여넣기" ? state.apiUrl : '';
+      document.getElementById('input-api-url').value = state.apiUrl !== DEFAULT_API_URL ? state.apiUrl : '';
 
       document.querySelectorAll('.btn-pastor').forEach((btn, idx) => {
         if (idx === state.pastorIndex) {
