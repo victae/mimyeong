@@ -46,7 +46,6 @@
       touch-action: manipulation;
     }
 
-    /* 2분 만료 시 깜빡이는 넛지 애니메이션 */
     @keyframes pulse-border {
       0%, 100% { border-color: rgba(91, 192, 190, 0.3); box-shadow: 0 0 15px rgba(91, 192, 190, 0.2); }
       50% { border-color: rgba(111, 255, 233, 0.9); box-shadow: 0 0 30px rgba(111, 255, 233, 0.6); }
@@ -56,7 +55,6 @@
       animation: pulse-border 1.5s infinite ease-in-out;
     }
 
-    /* 커스텀 스크롤바 */
     ::-webkit-scrollbar {
       width: 6px;
     }
@@ -74,7 +72,6 @@
   <!-- 상단 헤더 -->
   <header class="w-full bg-cardDark/80 backdrop-blur-md border-b border-accentNavy/40 px-4 py-3 flex items-center justify-between z-30">
     <div class="flex items-center space-x-3">
-      <!-- 교회 CI 로고 (오류 시 텍스트 파서) -->
       <img id="church-logo" src="./assets/dongsung-logo.png" alt="동성교회" class="h-8 object-contain" onError="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
       <div id="logo-fallback" class="hidden text-tealAccent font-bold text-lg tracking-wider">
         동성교회
@@ -86,10 +83,10 @@
     </div>
 
     <div class="flex items-center space-x-2">
-      <!-- 설정/교역자 변경 버튼 -->
+      <!-- 교역자 선택/설정 버튼 -->
       <button id="btn-open-settings" class="px-2.5 py-1.5 rounded-lg bg-accentNavy/50 hover:bg-accentNavy text-xs text-textLight flex items-center space-x-1.5 transition">
         <i class="fa-solid fa-sliders text-tealAccent"></i>
-        <span id="header-user-info" class="hidden sm:inline font-medium">교역자 선택</span>
+        <span id="header-user-info" class="font-medium">교역자 선택</span>
       </button>
     </div>
   </header>
@@ -99,11 +96,20 @@
     <div id="timer-progress" class="bg-gradient-to-r from-tealAccent to-brightAqua h-full w-0 transition-all duration-300 ease-linear"></div>
   </div>
 
-  <!-- 메인 콘텐츠 영역 (카테고리 선택 및 카드 슬라이드) -->
-  <main class="flex-1 relative flex flex-col justify-center items-center px-4 py-3 max-w-2xl w-full mx-auto z-10 overflow-hidden">
+  <!-- 메인 콘텐츠 영역 -->
+  <main class="flex-1 relative flex flex-col justify-center items-center px-4 py-2 max-w-2xl w-full mx-auto z-10 overflow-hidden">
 
-    <!-- 상단 기도 카테고리 탭 -->
-    <div class="w-full mb-3 flex bg-cardDark/90 p-1 rounded-xl border border-accentNavy/40 text-xs sm:text-sm z-20">
+    <!-- 평일(월~금) 요일 탭 -->
+    <div class="w-full mb-2 flex bg-cardDark/60 p-1 rounded-xl border border-accentNavy/30 text-xs">
+      <button data-weekday="1" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">월</button>
+      <button data-weekday="2" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">화</button>
+      <button data-weekday="3" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">수</button>
+      <button data-weekday="4" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">목</button>
+      <button data-weekday="5" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">금</button>
+    </div>
+
+    <!-- 기도 카테고리 탭 -->
+    <div class="w-full mb-2 flex bg-cardDark/90 p-1 rounded-xl border border-accentNavy/40 text-xs sm:text-sm z-20">
       <button id="tab-member" class="flex-1 py-2 rounded-lg font-medium transition text-center text-brightAqua bg-accentNavy/80 shadow">
         <i class="fa-solid fa-users text-xs mr-1"></i>성도 기도
       </button>
@@ -115,24 +121,21 @@
       </button>
     </div>
 
-    <!-- 카드 컨테이너 (터치 제스처 영역) -->
+    <!-- 카드 컨테이너 -->
     <div id="card-touch-zone" class="relative w-full flex-1 flex flex-col justify-center items-center cursor-pointer select-none my-1">
       
-      <!-- 좌측 30% 영역 안내 레이어 -->
       <div class="absolute left-0 top-0 bottom-0 w-[30%] z-20 opacity-0 hover:opacity-10 transition-opacity bg-tealAccent/20 rounded-l-2xl flex items-center justify-start pl-2 pointer-events-none">
         <i class="fa-solid fa-chevron-left text-2xl text-brightAqua"></i>
       </div>
-
-      <!-- 우측 70% 영역 안내 레이어 -->
       <div class="absolute right-0 top-0 bottom-0 w-[70%] z-20 opacity-0 hover:opacity-10 transition-opacity bg-tealAccent/20 rounded-r-2xl flex items-center justify-end pr-2 pointer-events-none">
         <i class="fa-solid fa-chevron-right text-2xl text-brightAqua"></i>
       </div>
 
       <!-- 실제 기도 카드 -->
-      <div id="prayer-card" class="w-full h-full max-h-[500px] bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative overflow-hidden">
+      <div id="prayer-card" class="w-full h-full max-h-[480px] bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative overflow-hidden">
         
         <!-- 카드 상단 메타데이터 -->
-        <div class="flex items-start justify-between border-b border-accentNavy/40 pb-3 mb-3">
+        <div class="flex items-start justify-between border-b border-accentNavy/40 pb-3 mb-2">
           <div>
             <div class="flex items-center space-x-2">
               <span id="card-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-tealAccent/20 text-brightAqua border border-tealAccent/40">
@@ -154,8 +157,8 @@
           </div>
         </div>
 
-        <!-- 기도제목 본문 영역 -->
-        <div id="card-body-scroll" class="flex-1 overflow-y-auto py-2 pr-1 my-2">
+        <!-- 본문 내용 (스크롤 지원) -->
+        <div id="card-body-scroll" class="flex-1 overflow-y-auto py-2 pr-1 my-1">
           <p id="card-content" class="text-lg sm:text-xl text-textLight/90 leading-relaxed font-normal whitespace-pre-line tracking-wide">
             기도제목 데이터를 불러오는 중입니다...
           </p>
@@ -176,9 +179,8 @@
 
     </div>
 
-    <!-- 터치 구역 안내 힌트 -->
     <p class="text-[11px] text-textLight/40 mt-1 text-center">
-      <i class="fa-solid fa-hand-pointer mr-1"></i>좌측 30% 터치: 이전 | 우측 70% 터치: 다음 (좌우 스와이프 가능)
+      <i class="fa-solid fa-hand-pointer mr-1"></i>좌측 30% 터치: 이전 | 우측 70% 터치: 다음 (스와이프 지원)
     </p>
 
   </main>
@@ -186,29 +188,23 @@
   <!-- 하단 컨트롤 바 -->
   <footer class="w-full bg-cardDark/90 border-t border-accentNavy/40 px-4 py-3 z-30">
     <div class="max-w-2xl mx-auto flex items-center justify-between">
-      
-      <!-- 이전 버튼 -->
       <button id="btn-prev" class="w-11 h-11 rounded-xl bg-accentNavy/40 hover:bg-accentNavy/80 text-brightAqua flex items-center justify-center transition active:scale-95">
         <i class="fa-solid fa-chevron-left text-lg"></i>
       </button>
 
-      <!-- 타이머 일시정지 / 재생 -->
       <button id="btn-toggle-timer" class="px-4 py-2.5 rounded-xl bg-tealAccent/20 hover:bg-tealAccent/30 text-brightAqua border border-tealAccent/40 flex items-center space-x-2 transition active:scale-95">
         <i id="timer-icon" class="fa-solid fa-pause text-sm"></i>
         <span id="timer-btn-text" class="text-xs font-medium">일시정지</span>
       </button>
 
-      <!-- 자동 넘김 토글 -->
       <button id="btn-toggle-auto" class="px-3 py-2.5 rounded-xl bg-accentNavy/30 border border-accentNavy/50 text-xs text-textLight/70 flex items-center space-x-1.5 transition">
         <i id="auto-icon" class="fa-solid fa-toggle-on text-tealAccent text-sm"></i>
         <span>자동넘김</span>
       </button>
 
-      <!-- 다음 버튼 -->
       <button id="btn-next" class="w-11 h-11 rounded-xl bg-tealAccent text-bgDark font-bold flex items-center justify-center shadow-lg hover:bg-brightAqua transition active:scale-95">
         <i class="fa-solid fa-chevron-right text-lg"></i>
       </button>
-
     </div>
   </footer>
 
@@ -219,7 +215,7 @@
       <div class="flex items-center justify-between border-b border-accentNavy/50 pb-3">
         <h3 class="text-lg font-bold text-brightAqua flex items-center space-x-2">
           <i class="fa-solid fa-user-gear"></i>
-          <span>기도 환경 설정</span>
+          <span>담당 교역자 선택</span>
         </h3>
         <button id="btn-close-modal" class="text-textLight/60 hover:text-textLight p-1">
           <i class="fa-solid fa-xmark text-xl"></i>
@@ -228,54 +224,35 @@
 
       <!-- 교역자 선택 -->
       <div class="space-y-2">
-        <label class="text-xs font-semibold text-tealAccent block">1. 담당 교역자 선택</label>
+        <label class="text-xs font-semibold text-tealAccent block">담당 교역자를 선택해 주세요</label>
         <div class="grid grid-cols-3 gap-2">
           <button data-pastor="0" class="btn-pastor p-3 rounded-xl border border-accentNavy/60 bg-bgDark/60 text-xs text-center transition hover:border-tealAccent">
             <div class="font-bold text-sm text-textLight">박태한</div>
-            <div class="text-[10px] text-textLight/50 mt-0.5">목사/전도사</div>
+            <div class="text-[10px] text-tealAccent mt-0.5">목사</div>
           </button>
           <button data-pastor="1" class="btn-pastor p-3 rounded-xl border border-accentNavy/60 bg-bgDark/60 text-xs text-center transition hover:border-tealAccent">
             <div class="font-bold text-sm text-textLight">최호민</div>
-            <div class="text-[10px] text-textLight/50 mt-0.5">목사/전도사</div>
+            <div class="text-[10px] text-tealAccent mt-0.5">목사</div>
           </button>
           <button data-pastor="2" class="btn-pastor p-3 rounded-xl border border-accentNavy/60 bg-bgDark/60 text-xs text-center transition hover:border-tealAccent">
             <div class="font-bold text-sm text-textLight">박호준</div>
-            <div class="text-[10px] text-textLight/50 mt-0.5">목사/전도사</div>
+            <div class="text-[10px] text-tealAccent mt-0.5">목사</div>
           </button>
         </div>
       </div>
 
-      <!-- Day 선택 (4일 순환) -->
-      <div class="space-y-2">
-        <label class="text-xs font-semibold text-tealAccent block">2. 주간 기도 진행일 선택 (4일 순환)</label>
-        <div class="grid grid-cols-4 gap-2">
-          <button data-day="1" class="btn-day p-2.5 rounded-xl border border-accentNavy/60 bg-bgDark/60 text-xs font-semibold text-center hover:border-tealAccent">Day 1</button>
-          <button data-day="2" class="btn-day p-2.5 rounded-xl border border-accentNavy/60 bg-bgDark/60 text-xs font-semibold text-center hover:border-tealAccent">Day 2</button>
-          <button data-day="3" class="btn-day p-2.5 rounded-xl border border-accentNavy/60 bg-bgDark/60 text-xs font-semibold text-center hover:border-tealAccent">Day 3</button>
-          <button data-day="4" class="btn-day p-2.5 rounded-xl border border-accentNavy/60 bg-bgDark/60 text-xs font-semibold text-center hover:border-tealAccent">Day 4</button>
-        </div>
-        <p class="text-[11px] text-textLight/50 mt-1">
-          * 3인의 교역자가 4일간 서로 다른 구역에서 출발하여 전체 성도 기도제목을 100% 기도합니다.
-        </p>
-      </div>
-
-      <!-- Google Apps Script API URL 설정 -->
-      <div class="space-y-2 pt-2 border-t border-accentNavy/40">
-        <label class="text-xs font-semibold text-tealAccent block">3. 구글 연동 API Web App URL</label>
-        <input id="input-api-url" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-bgDark border border-accentNavy rounded-xl px-3 py-2 text-xs text-textLight focus:outline-none focus:border-tealAccent">
-        <p class="text-[10px] text-textLight/40">입력하지 않으면 기본 목업(Mock) 데이터로 동작합니다.</p>
-      </div>
-
-      <!-- 저장 버튼 -->
       <button id="btn-save-settings" class="w-full py-3 rounded-xl bg-gradient-to-r from-tealAccent to-brightAqua text-bgDark font-bold text-sm shadow-lg hover:opacity-95 transition">
-        설정 저장 및 기도 시작
+        선택 완료 및 기도 시작
       </button>
 
     </div>
   </div>
 
-  <!-- JavaScript 애플리케이션 로직 -->
+  <!-- JavaScript 로직 -->
   <script>
+    // ★★★ 여기에 복사해 둔 Apps Script 배포 URL을 입력해 두시면 교역자분들이 따로 주소를 적을 필요가 없습니다 ★★★
+    const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec";
+
     const MOCK_DATA = {
       members: [
         { id: 1, name: "김은혜", role: "권사", date: "2026.08.15", type: "이번달 집중", content: "1. 자녀의 대학 입시와 믿음의 진로를 위해 기도합니다.\n2. 남편 사업장의 경제적 어려움이 회복되고 예배가 회복되게 하소서." },
@@ -295,12 +272,20 @@
       ]
     };
 
-    const PASTORS = ["박태한", "최호민", "박호준"];
+    const PASTORS = ["박태한 목사", "최호민 목사", "박호준 목사"];
+    const WEEKDAYS_KO = ["", "월", "화", "수", "목", "금"];
+
+    // 평일(월=1, 화=2, 수=3, 목=4, 금=5) 자동 계산, 주말 접속 시 월요일로 보정
+    function getTodayWeekday() {
+      const day = new Date().getDay();
+      if (day >= 1 && day <= 5) return day;
+      return 1;
+    }
 
     let state = {
       pastorIndex: parseInt(localStorage.getItem('mimyeong_pastor') || '0'),
-      dayIndex: parseInt(localStorage.getItem('mimyeong_day') || '1'),
-      apiUrl: localStorage.getItem('mimyeong_api_url') || '',
+      currentWeekday: getTodayWeekday(),
+      apiUrl: DEFAULT_API_URL,
       category: 'member',
       data: MOCK_DATA,
       activeList: [],
@@ -324,9 +309,10 @@
 
     async function initApp() {
       setupEventListeners();
+      updateWeekdayUI();
       updateHeaderInfo();
       
-      if (state.apiUrl) {
+      if (state.apiUrl && state.apiUrl !== "여기에_Apps_Script_URL_붙여넣기") {
         await fetchDataFromGAS();
       } else {
         filterDataByRotation();
@@ -335,9 +321,21 @@
       startTimer();
     }
 
+    function updateWeekdayUI() {
+      document.querySelectorAll('.btn-weekday').forEach(btn => {
+        const d = parseInt(btn.dataset.weekday);
+        if (d === state.currentWeekday) {
+          btn.className = 'btn-weekday flex-1 py-1.5 rounded-lg font-bold transition text-center text-brightAqua bg-accentNavy/90 shadow border border-tealAccent/40';
+        } else {
+          btn.className = 'btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/50 hover:text-textLight';
+        }
+      });
+    }
+
     function updateHeaderInfo() {
-      const pastorName = PASTORS[state.pastorIndex] || "교역자";
-      elHeaderUserInfo.textContent = `${pastorName} 목사 (Day ${state.dayIndex})`;
+      const pastorName = PASTORS[state.pastorIndex] || "목사";
+      const dayText = WEEKDAYS_KO[state.currentWeekday] || "월";
+      elHeaderUserInfo.textContent = `${pastorName} (${dayText}요일)`;
     }
 
     function filterDataByRotation() {
@@ -355,10 +353,10 @@
           return;
         }
 
-        const pastorOffset = Math.floor(state.pastorIndex * (N / 3));
         const chunkSize = Math.ceil(N / 4);
-        const dayOffset = (state.dayIndex - 1) * chunkSize;
-        const startIndex = (pastorOffset + dayOffset) % N;
+        const pastorOffset = Math.floor(state.pastorIndex * (N / 3));
+        const dayProgress = (state.currentWeekday - 1) * chunkSize;
+        const startIndex = (pastorOffset + dayProgress) % N;
 
         let rotated = [];
         for (let i = 0; i < chunkSize; i++) {
@@ -467,6 +465,15 @@
     }
 
     function setupEventListeners() {
+      document.querySelectorAll('.btn-weekday').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          state.currentWeekday = parseInt(e.currentTarget.dataset.weekday);
+          updateWeekdayUI();
+          updateHeaderInfo();
+          filterDataByRotation();
+        });
+      });
+
       document.getElementById('tab-member').addEventListener('click', (e) => switchCategory('member', e.currentTarget));
       document.getElementById('tab-patient').addEventListener('click', (e) => switchCategory('patient', e.currentTarget));
       document.getElementById('tab-mission').addEventListener('click', (e) => switchCategory('mission', e.currentTarget));
@@ -537,7 +544,6 @@
 
     function openSettingsModal() {
       document.getElementById('modal-settings').classList.remove('hidden');
-      document.getElementById('input-api-url').value = state.apiUrl;
 
       document.querySelectorAll('.btn-pastor').forEach((btn, idx) => {
         if (idx === state.pastorIndex) {
@@ -551,20 +557,6 @@
           state.tempPastor = idx;
         };
       });
-
-      document.querySelectorAll('.btn-day').forEach((btn) => {
-        const dayVal = parseInt(btn.dataset.day);
-        if (dayVal === state.dayIndex) {
-          btn.classList.add('border-brightAqua', 'bg-tealAccent/20', 'text-brightAqua');
-        } else {
-          btn.classList.remove('border-brightAqua', 'bg-tealAccent/20', 'text-brightAqua');
-        }
-        btn.onclick = () => {
-          document.querySelectorAll('.btn-day').forEach(b => b.classList.remove('border-brightAqua', 'bg-tealAccent/20', 'text-brightAqua'));
-          btn.classList.add('border-brightAqua', 'bg-tealAccent/20', 'text-brightAqua');
-          state.tempDay = dayVal;
-        };
-      });
     }
 
     function closeSettingsModal() {
@@ -573,19 +565,13 @@
 
     function saveSettings() {
       if (state.tempPastor !== undefined) state.pastorIndex = state.tempPastor;
-      if (state.tempDay !== undefined) state.dayIndex = state.tempDay;
       
-      const newUrl = document.getElementById('input-api-url').value.trim();
-      state.apiUrl = newUrl;
-
       localStorage.setItem('mimyeong_pastor', state.pastorIndex);
-      localStorage.setItem('mimyeong_day', state.dayIndex);
-      localStorage.setItem('mimyeong_api_url', state.apiUrl);
 
       updateHeaderInfo();
       closeSettingsModal();
 
-      if (state.apiUrl) {
+      if (state.apiUrl && state.apiUrl !== "여기에_Apps_Script_URL_붙여넣기") {
         fetchDataFromGAS();
       } else {
         filterDataByRotation();
