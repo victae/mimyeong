@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>미명 (未明) - 동성교회 새벽기도</title>
   
+  <!-- 브라우저 파비콘 및 스마트폰 앱 아이콘 연결 -->
+  <link rel="icon" type="image/png" href="./icon_prayer.png">
+  <link rel="apple-touch-icon" href="./icon_prayer.png">
+
+  <!-- 모바일 전체화면 웹앱 설정 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="미명">
+  <meta name="theme-color" content="#0B132B">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -72,7 +82,8 @@
   <!-- 상단 헤더 -->
   <header class="w-full bg-cardDark/80 backdrop-blur-md border-b border-accentNavy/40 px-4 py-3 flex items-center justify-between z-30">
     <div class="flex items-center space-x-3">
-      <img id="church-logo" src="./assets/dongsung-logo.png" alt="동성교회" class="h-8 object-contain" onError="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+      <!-- 헤더 앱 로고 아이콘 -->
+      <img id="church-logo" src="./icon_prayer.png" alt="미명" class="h-8 w-8 rounded-lg object-cover shadow-sm border border-tealAccent/30" onError="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
       <div id="logo-fallback" class="hidden text-tealAccent font-bold text-lg tracking-wider">
         동성교회
       </div>
@@ -83,7 +94,7 @@
     </div>
 
     <div class="flex items-center space-x-2">
-      <!-- 교역자 선택/설정 버튼 -->
+      <!-- 교역자 선택 버튼 -->
       <button id="btn-open-settings" class="px-2.5 py-1.5 rounded-lg bg-accentNavy/50 hover:bg-accentNavy text-xs text-textLight flex items-center space-x-1.5 transition">
         <i class="fa-solid fa-sliders text-tealAccent"></i>
         <span id="header-user-info" class="font-medium">교역자 선택</span>
@@ -134,7 +145,7 @@
       <!-- 실제 기도 카드 -->
       <div id="prayer-card" class="w-full h-full max-h-[480px] bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative overflow-hidden">
         
-        <!-- 카드 상단 메타데이터 -->
+        <!-- 카드 상단 정보 -->
         <div class="flex items-start justify-between border-b border-accentNavy/40 pb-3 mb-2">
           <div>
             <div class="flex items-center space-x-2">
@@ -157,7 +168,7 @@
           </div>
         </div>
 
-        <!-- 본문 내용 (스크롤 지원) -->
+        <!-- 본문 (긴 내용 스크롤) -->
         <div id="card-body-scroll" class="flex-1 overflow-y-auto py-2 pr-1 my-1">
           <p id="card-content" class="text-lg sm:text-xl text-textLight/90 leading-relaxed font-normal whitespace-pre-line tracking-wide">
             기도제목 데이터를 불러오는 중입니다...
@@ -241,6 +252,12 @@
         </div>
       </div>
 
+      <!-- 구글 연동 URL 직접 입력/수정 칸 -->
+      <div class="space-y-2 pt-2 border-t border-accentNavy/40">
+        <label class="text-xs font-semibold text-tealAccent block">구글 연동 Web App URL</label>
+        <input id="input-api-url" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-bgDark border border-accentNavy rounded-xl px-3 py-2 text-xs text-textLight focus:outline-none focus:border-tealAccent">
+      </div>
+
       <button id="btn-save-settings" class="w-full py-3 rounded-xl bg-gradient-to-r from-tealAccent to-brightAqua text-bgDark font-bold text-sm shadow-lg hover:opacity-95 transition">
         선택 완료 및 기도 시작
       </button>
@@ -250,8 +267,8 @@
 
   <!-- JavaScript 로직 -->
   <script>
-    // ★★★ 여기에 복사해 둔 Apps Script 배포 URL을 입력해 두시면 교역자분들이 따로 주소를 적을 필요가 없습니다 ★★★
-    const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec";
+    // ★★★ 복사해 둔 Google Apps Script Web App URL을 따옴표 안에 넣어주세요 ★★★
+    const DEFAULT_API_URL = "여기에_Apps_Script_URL_붙여넣기";
 
     const MOCK_DATA = {
       members: [
@@ -275,17 +292,16 @@
     const PASTORS = ["박태한 목사", "최호민 목사", "박호준 목사"];
     const WEEKDAYS_KO = ["", "월", "화", "수", "목", "금"];
 
-    // 평일(월=1, 화=2, 수=3, 목=4, 금=5) 자동 계산, 주말 접속 시 월요일로 보정
     function getTodayWeekday() {
       const day = new Date().getDay();
       if (day >= 1 && day <= 5) return day;
-      return 1;
+      return 1; // 주말 접속 시 월요일 기본
     }
 
     let state = {
       pastorIndex: parseInt(localStorage.getItem('mimyeong_pastor') || '0'),
       currentWeekday: getTodayWeekday(),
-      apiUrl: DEFAULT_API_URL,
+      apiUrl: localStorage.getItem('mimyeong_api_url') || DEFAULT_API_URL,
       category: 'member',
       data: MOCK_DATA,
       activeList: [],
@@ -312,7 +328,7 @@
       updateWeekdayUI();
       updateHeaderInfo();
       
-      if (state.apiUrl && state.apiUrl !== "여기에_Apps_Script_URL_붙여넣기") {
+      if (state.apiUrl && state.apiUrl !== "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec") {
         await fetchDataFromGAS();
       } else {
         filterDataByRotation();
@@ -544,6 +560,7 @@
 
     function openSettingsModal() {
       document.getElementById('modal-settings').classList.remove('hidden');
+      document.getElementById('input-api-url').value = state.apiUrl !== "여기에_Apps_Script_URL_붙여넣기" ? state.apiUrl : '';
 
       document.querySelectorAll('.btn-pastor').forEach((btn, idx) => {
         if (idx === state.pastorIndex) {
@@ -566,6 +583,12 @@
     function saveSettings() {
       if (state.tempPastor !== undefined) state.pastorIndex = state.tempPastor;
       
+      const newUrl = document.getElementById('input-api-url').value.trim();
+      if (newUrl) {
+        state.apiUrl = newUrl;
+        localStorage.setItem('mimyeong_api_url', state.apiUrl);
+      }
+
       localStorage.setItem('mimyeong_pastor', state.pastorIndex);
 
       updateHeaderInfo();
