@@ -77,19 +77,13 @@
       border-radius: 3px;
     }
 
-    /* ===================================================
-       스마트 가로 모드 (Landscape) 전용 초슬림 압축 레이아웃
-       =================================================== */
+    /* 가로 모드 (Landscape) 전용 초슬림 압축 레이아웃 */
     @media (orientation: landscape) and (max-height: 550px) {
-      /* 상단 별도 말씀 배너 숨기고 헤더 안으로 통합 */
       #standalone-verse-banner {
         display: none !important;
       }
       #header-inline-verse {
         display: block !important;
-      }
-      #header-user-text {
-        display: none !important;
       }
       #main-container {
         padding-top: 4px !important;
@@ -111,7 +105,6 @@
       #prayer-card {
         padding: 10px 16px !important;
       }
-      /* 가로모드 카드 상단 1줄 가로 배치 */
       #card-header-wrapper {
         flex-direction: row !important;
         align-items: center !important;
@@ -233,23 +226,22 @@
       <!-- 실제 기도 카드 -->
       <div id="prayer-card" class="w-full bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative">
         
-        <!-- 카드 상단 헤더 영역 (가로 모드에서는 1줄 완전 통합) -->
+        <!-- 카드 상단 정보 영역 -->
         <div id="card-header-wrapper" class="border-b border-accentNavy/40 pb-2.5 mb-2.5 flex flex-col">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
               <span id="card-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-tealAccent/20 text-brightAqua border border-tealAccent/40 word-keep">
-                소그룹 기도
+                선교사
               </span>
-              <span id="card-sub-info" class="text-xs text-textLight/60 word-keep">
-                등록일
-              </span>
+              <!-- 불필요한 보조텍스트 제거 -->
+              <span id="card-sub-info" class="text-xs text-textLight/60 word-keep hidden"></span>
             </div>
             <span id="card-counter" class="text-xs font-mono px-2 py-0.5 bg-bgDark/80 rounded-lg text-brightAqua border border-accentNavy/40">
               0 / 0
             </span>
           </div>
 
-          <!-- 이름/국가 및 직분/담당자 -->
+          <!-- 이름/직분 (선교사 vs 교회/환우/성도 자동 스위칭 타이포) -->
           <div id="card-title-group" class="mt-2 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
             <h2 id="card-title-name" class="text-2xl sm:text-3xl font-bold text-textLight word-keep leading-tight">
               로딩 중
@@ -315,7 +307,7 @@
     </div>
   </footer>
 
-  <!-- 소그룹 / 교역자 선택 & 비밀번호 모달 (카테고리 구분선 완전 삭제) -->
+  <!-- 소그룹 / 교역자 선택 & 비밀번호 모달 -->
   <div id="modal-login" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-cardDark border border-accentNavy rounded-2xl w-full max-w-md p-6 shadow-2xl relative space-y-4">
       
@@ -327,7 +319,6 @@
         <p class="text-xs text-textLight/60 mt-1">소속 소그룹 또는 담당 교역자를 선택해 주세요.</p>
       </div>
 
-      <!-- 불필요한 태그/optgroup을 완전히 없앤 깔끔한 단일 리스트 -->
       <div class="space-y-1.5">
         <label class="text-xs font-semibold text-tealAccent">1. 소속 선택</label>
         <select id="select-group-key" class="w-full bg-bgDark border border-accentNavy rounded-xl px-3 py-2.5 text-sm text-textLight focus:outline-none focus:border-tealAccent">
@@ -351,7 +342,6 @@
         </select>
       </div>
 
-      <!-- 4자리 PIN 번호 입력 -->
       <div class="space-y-1.5">
         <label class="text-xs font-semibold text-tealAccent">2. 비밀번호 (4자리)</label>
         <input id="input-group-pin" type="password" maxlength="4" placeholder="숫자 4자리 입력" class="w-full bg-bgDark border border-accentNavy rounded-xl px-3 py-2.5 text-center text-lg tracking-widest text-brightAqua font-mono focus:outline-none focus:border-tealAccent">
@@ -369,7 +359,6 @@
   <script>
     const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec";
 
-    // 소그룹 및 교역자 PIN 설정
     const GROUP_CONFIG = {
       "PASTOR_PARK": { name: "박태한 목사", type: "pastor", pastorIdx: 0, pin: "0000" },
       "PASTOR_CHOI": { name: "최호민 목사", type: "pastor", pastorIdx: 1, pin: "0000" },
@@ -453,7 +442,8 @@
         { id: 101, name: "오성수", role: "집사", date: "2026.08.10", type: "항암 치료 중", content: "1. 3차 항암 치료 과정 중 부작용이 최소화되고 체력이 회복되게 하소서.\n2. 마음의 평안과 구원의 확신이 더욱 견고해지게 하소서." }
       ],
       missions: [
-        { id: 201, name: "가지교회", role: "고재만 목사", date: "2026.08.01", type: "동역교회", content: "1. 교회의 영적 부흥과 지역 사회를 섬기는 복음의 통로가 되도록\n2. 성도들의 가정이 믿음 안에서 든든히 세워지도록" }
+        { id: 201, name: "필리핀", role: "윤성호/허유실 선교사", date: "2026.08.01", type: "선교사", content: "1. 선교지 사역 가운데 성령의 기름 부으심이 넘치도록\n2. 가정과 자녀들의 영육 간 강건함을 위해" },
+        { id: 202, name: "가지교회", role: "고재만 목사", date: "2026.08.01", type: "동역교회", content: "1. 교회의 영적 부흥과 지역 사회를 섬기는 복음의 통로가 되도록\n2. 성도들의 가정이 믿음 안에서 든든히 세워지도록" }
       ]
     };
 
@@ -481,7 +471,6 @@
 
     const elCard = document.getElementById('prayer-card');
     const elBadge = document.getElementById('card-badge');
-    const elSubInfo = document.getElementById('card-sub-info');
     const elName = document.getElementById('card-title-name');
     const elRole = document.getElementById('card-title-role');
     const elCounter = document.getElementById('card-counter');
@@ -633,7 +622,6 @@
 
       if (!state.activeList || state.activeList.length === 0) {
         elBadge.textContent = "안내";
-        elSubInfo.textContent = "";
         elName.textContent = "기도제목 없음";
         elRole.textContent = "";
         elCounter.textContent = "0 / 0";
@@ -643,11 +631,19 @@
 
       const item = state.activeList[state.currentIndex];
       elBadge.textContent = item.type || (item.group ? item.group : "중보기도");
-      elSubInfo.textContent = item.date || "";
-      elName.textContent = item.name || "무명";
-      elRole.textContent = item.role || "";
       elCounter.textContent = `${state.currentIndex + 1} / ${state.activeList.length}`;
       elContent.textContent = item.content || "";
+
+      // ★★★ 선교사 vs 동역교회/성도 타이포그래피 자동 스위칭 로직 ★★★
+      if (item.type === '선교사') {
+        // 선교사: "윤성호/허유실 선교사"를 크고 굵게 앞으로, "필리핀"을 작고 은은하게 뒤로
+        elName.textContent = item.role || "선교사 가정";
+        elRole.textContent = item.name ? item.name.replace(/선교지/g, '').trim() : "";
+      } else {
+        // 동역교회/기관/성도/환우: "가지교회" / "송춘순"을 크고 굵게 앞으로, "고재만 목사" / "권사"를 작게 뒤로
+        elName.textContent = item.name || "무명";
+        elRole.textContent = item.role || "";
+      }
 
       document.getElementById('card-body-scroll').scrollTop = 0;
     }
