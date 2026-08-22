@@ -106,24 +106,14 @@
         padding: 10px 16px !important;
       }
       #card-header-wrapper {
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: space-between !important;
         padding-bottom: 6px !important;
         margin-bottom: 6px !important;
       }
-      #card-title-group {
-        flex-direction: row !important;
-        align-items: baseline !important;
-        gap: 8px !important;
-        margin-top: 0px !important;
-      }
       #card-title-name {
         font-size: 1.25rem !important;
-        line-height: 1.2 !important;
       }
       #card-title-role {
-        font-size: 0.875rem !important;
+        font-size: 0.95rem !important;
       }
       #card-body-scroll {
         max-height: 140px !important;
@@ -226,28 +216,26 @@
       <!-- 실제 기도 카드 -->
       <div id="prayer-card" class="w-full bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative">
         
-        <!-- 카드 상단 정보 영역 -->
-        <div id="card-header-wrapper" class="border-b border-accentNavy/40 pb-2.5 mb-2.5 flex flex-col">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2">
+        <!-- 카드 상단 정보 영역 (한 줄 정렬 및 깔끔한 상단 바) -->
+        <div id="card-header-wrapper" class="border-b border-accentNavy/40 pb-2.5 mb-2.5">
+          <div class="flex items-center justify-between mb-2">
+            <div>
               <span id="card-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-tealAccent/20 text-brightAqua border border-tealAccent/40 word-keep">
-                선교사
+                중보기도
               </span>
-              <!-- 불필요한 보조텍스트 제거 -->
-              <span id="card-sub-info" class="text-xs text-textLight/60 word-keep hidden"></span>
             </div>
             <span id="card-counter" class="text-xs font-mono px-2 py-0.5 bg-bgDark/80 rounded-lg text-brightAqua border border-accentNavy/40">
               0 / 0
             </span>
           </div>
 
-          <!-- 이름/직분 (선교사 vs 교회/환우/성도 자동 스위칭 타이포) -->
-          <div id="card-title-group" class="mt-2 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+          <!-- 이름 + 직분 한 줄(Inline) 결합 영역 (줄바꿈 없이 한 줄로 깔끔하게 연결) -->
+          <div class="flex items-baseline space-x-2">
             <h2 id="card-title-name" class="text-2xl sm:text-3xl font-bold text-textLight word-keep leading-tight">
               로딩 중
             </h2>
-            <div id="card-title-role" class="text-sm sm:text-base font-medium text-tealAccent word-keep">
-            </div>
+            <span id="card-title-role" class="text-base sm:text-lg font-medium text-tealAccent word-keep">
+            </span>
           </div>
         </div>
 
@@ -439,7 +427,7 @@
         { id: 2, name: "박철민", role: "집사", group: "1남전도회_곽윤필", date: "2026.08.16", type: "응답시까지 지속", content: "1. 직장 내 직분자로서 빛과 소금의 역할을 감당하게 하소서.\n2. 양가 부모님의 건강과 영혼 구원을 위해 간구합니다." }
       ],
       patients: [
-        { id: 101, name: "오성수", role: "집사", date: "2026.08.10", type: "항암 치료 중", content: "1. 3차 항암 치료 과정 중 부작용이 최소화되고 체력이 회복되게 하소서.\n2. 마음의 평안과 구원의 확신이 더욱 견고해지게 하소서." }
+        { id: 101, name: "전안례", role: "권사", date: "2026.08.10", type: "암 수술 후 회복중", content: "건강히 잘 회복되도록" }
       ],
       missions: [
         { id: 201, name: "필리핀", role: "윤성호/허유실 선교사", date: "2026.08.01", type: "선교사", content: "1. 선교지 사역 가운데 성령의 기름 부으심이 넘치도록\n2. 가정과 자녀들의 영육 간 강건함을 위해" },
@@ -634,13 +622,14 @@
       elCounter.textContent = `${state.currentIndex + 1} / ${state.activeList.length}`;
       elContent.textContent = item.content || "";
 
-      // ★★★ 선교사 vs 동역교회/성도 타이포그래피 자동 스위칭 로직 ★★★
+      // ★★★ 한 줄(Inline) 통합 타이포그래피 ★★★
       if (item.type === '선교사') {
-        // 선교사: "윤성호/허유실 선교사"를 크고 굵게 앞으로, "필리핀"을 작고 은은하게 뒤로
+        // 선교사: "윤성호/허유실 선교사" + "(필리핀)" 한 줄 표시
         elName.textContent = item.role || "선교사 가정";
-        elRole.textContent = item.name ? item.name.replace(/선교지/g, '').trim() : "";
+        const country = item.name ? item.name.replace(/선교지/g, '').trim() : "";
+        elRole.textContent = country ? `(${country})` : "";
       } else {
-        // 동역교회/기관/성도/환우: "가지교회" / "송춘순"을 크고 굵게 앞으로, "고재만 목사" / "권사"를 작게 뒤로
+        // 성도/환우/동역교회: "전안례" + "권사" 또는 "가지교회" + "고재만 목사" 한 줄 표시
         elName.textContent = item.name || "무명";
         elRole.textContent = item.role || "";
       }
