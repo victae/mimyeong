@@ -88,7 +88,7 @@
       </div>
     </div>
 
-    <!-- 소그룹/교역자 로그인 정보 및 전환 버튼 -->
+    <!-- 소그룹/교역자 선택 버튼 -->
     <button id="btn-open-login" class="px-2.5 py-1.5 rounded-lg bg-accentNavy/60 hover:bg-accentNavy text-xs text-textLight flex items-center space-x-1.5 transition border border-tealAccent/30">
       <i class="fa-solid fa-lock text-tealAccent"></i>
       <span id="header-user-info" class="font-medium">소그룹 선택</span>
@@ -100,7 +100,7 @@
     <div id="timer-progress" class="bg-gradient-to-r from-tealAccent to-brightAqua h-full w-0 transition-all duration-300 ease-linear"></div>
   </div>
 
-  <!-- 중앙 정렬 대형 성경구절 배너 (가독성 강화) -->
+  <!-- 중앙 정렬 대형 성경구절 배너 -->
   <div class="w-full bg-cardDark/50 border-b border-accentNavy/40 px-4 py-3 text-center z-20 shadow-inner">
     <div class="max-w-2xl mx-auto flex flex-col items-center justify-center space-y-1">
       <div class="flex items-center space-x-1 text-tealAccent text-[11px] font-semibold tracking-wider uppercase">
@@ -114,10 +114,10 @@
     </div>
   </div>
 
-  <!-- 메인 스크롤 콘텐츠 영역 (가로 모드 및 작은 화면 완벽 대응) -->
+  <!-- 메인 스크롤 콘텐츠 영역 (가로 모드 및 세로 모드 완벽 대응) -->
   <main class="flex-1 overflow-y-auto px-4 py-3 max-w-2xl w-full mx-auto flex flex-col justify-start space-y-3 z-10">
 
-    <!-- 상단 기도 카테고리 탭 -->
+    <!-- 기도 카테고리 탭 -->
     <div class="w-full flex bg-cardDark/90 p-1 rounded-xl border border-accentNavy/40 text-xs sm:text-sm z-20">
       <button id="tab-member" class="flex-1 py-2 rounded-lg font-medium transition text-center text-brightAqua bg-accentNavy/80 shadow">
         <i class="fa-solid fa-users text-xs mr-1"></i><span id="tab-member-title">성도 기도</span>
@@ -130,7 +130,7 @@
       </button>
     </div>
 
-    <!-- 기도 카드 영역 -->
+    <!-- 기도 카드 터치 영역 -->
     <div id="card-touch-zone" class="relative w-full min-h-[360px] sm:min-h-[420px] flex flex-col justify-center items-center cursor-pointer select-none">
       
       <div class="absolute left-0 top-0 bottom-0 w-[30%] z-20 opacity-0 hover:opacity-10 transition-opacity bg-tealAccent/20 rounded-l-2xl flex items-center justify-start pl-2 pointer-events-none">
@@ -140,15 +140,15 @@
         <i class="fa-solid fa-chevron-right text-2xl text-brightAqua"></i>
       </div>
 
-      <!-- 실제 기도 카드 (반응형 내부 스크롤) -->
+      <!-- 실제 기도 카드 -->
       <div id="prayer-card" class="w-full bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative">
         
-        <!-- 카드 상단 정보 -->
+        <!-- 카드 상단 메타데이터 -->
         <div class="flex items-start justify-between border-b border-accentNavy/40 pb-3 mb-3">
           <div>
             <div class="flex items-center space-x-2">
               <span id="card-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-tealAccent/20 text-brightAqua border border-tealAccent/40">
-                이번달 집중
+                소그룹 기도
               </span>
               <span id="card-sub-info" class="text-xs text-textLight/60">
                 등록일
@@ -166,7 +166,7 @@
           </div>
         </div>
 
-        <!-- 본문 내용 (긴 기도제목 스크롤 지원) -->
+        <!-- 본문 내용 -->
         <div id="card-body-scroll" class="overflow-y-auto max-h-[260px] sm:max-h-[300px] py-2 pr-1 my-2">
           <p id="card-content" class="text-lg sm:text-xl text-textLight/95 leading-relaxed font-normal whitespace-pre-line tracking-wide">
             기도제목 데이터를 불러오는 중입니다...
@@ -188,7 +188,7 @@
 
     </div>
 
-    <!-- 하단 평일 요일 선택 바 (교역자 모드일 때만 순환 롤링에 활용, 소그룹 모드일 땐 보조용) -->
+    <!-- 하단 평일 요일 선택 바 (교역자 모드일 때 4일 순환용) -->
     <div id="weekday-container" class="w-full flex bg-cardDark/60 p-1 rounded-xl border border-accentNavy/30 text-xs">
       <button data-weekday="1" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">월</button>
       <button data-weekday="2" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">화</button>
@@ -235,23 +235,33 @@
           <i class="fa-solid fa-church text-xl"></i>
         </div>
         <h3 class="text-lg font-bold text-brightAqua">소그룹 및 교역자 인증</h3>
-        <p class="text-xs text-textLight/60 mt-1">소속 소그룹 또는 교역자를 선택하고 비밀번호를 입력하세요.</p>
+        <p class="text-xs text-textLight/60 mt-1">소속 소그룹 또는 담당 교역자를 선택해 주세요.</p>
       </div>
 
       <!-- 그룹 선택 드롭다운 -->
       <div class="space-y-1.5">
         <label class="text-xs font-semibold text-tealAccent">1. 소속 선택</label>
         <select id="select-group-key" class="w-full bg-bgDark border border-accentNavy rounded-xl px-3 py-2.5 text-sm text-textLight focus:outline-none focus:border-tealAccent">
-          <optgroup label="[ 교역자 전용 (전체 성도) ]">
+          <optgroup label="[ 교역자 전용 (전체 성도 기도) ]">
             <option value="PASTOR_PARK">박태한 목사</option>
             <option value="PASTOR_CHOI">최호민 목사</option>
             <option value="PASTOR_HO">박호준 목사</option>
           </optgroup>
-          <optgroup label="[ 성도 소그룹 (구역/목장) ]">
-            <option value="G_1_1">1교구 1구역</option>
-            <option value="G_1_2">1교구 2구역</option>
-            <option value="G_2_1">2교구 1구역</option>
-            <option value="G_YOUTH">청년부 1셀</option>
+          <optgroup label="[ 성도 소그룹 / 남전도회 ]">
+            <option value="G_1_MALE">1남전도회_곽윤필</option>
+            <option value="G_2_MALE">2남전도회_최운재</option>
+            <option value="G_SPRING">봄길_서태범</option>
+            <option value="G_FREEDOM">주안에 자유_시희덕</option>
+            <option value="G_SHARON">샤론_장군자</option>
+            <option value="G_HARMONY">화음_장수자</option>
+            <option value="G_IMMANUEL">임마누엘_이화묵</option>
+            <option value="G_EBENEZER">에벤에셀_김영애</option>
+            <option value="G_EIRENE">에이레네_이순종</option>
+            <option value="G_SHALOM">샬롬_백영자</option>
+            <option value="G_FRAGRANCE">향기_이금지</option>
+            <option value="G_FORGET">물망초_원봉선</option>
+            <option value="G_WATERED">물댄동산_김현정</option>
+            <option value="G_REFRESH">상큼이_김지나</option>
           </optgroup>
         </select>
       </div>
@@ -275,16 +285,28 @@
   <script>
     const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec";
 
-    // ★★★ [비밀번호 및 소그룹 설정] 필요 시 여기서 구역 이름과 PIN을 수정/추가하세요 ★★★
+    // ★★★ [소그룹 및 교역자 비밀번호 설정] 여기서 4자리 pin 번호를 자유롭게 수정하세요 ★★★
     const GROUP_CONFIG = {
-      "PASTOR_PARK": { name: "박태한 목사", type: "pastor", pastorIdx: 0, pin: "1234" },
-      "PASTOR_CHOI": { name: "최호민 목사", type: "pastor", pastorIdx: 1, pin: "1234" },
-      "PASTOR_HO":   { name: "박호준 목사", type: "pastor", pastorIdx: 2, pin: "1234" },
+      // 교역자 그룹 (전체 성도 4일 순환 롤링)
+      "PASTOR_PARK": { name: "박태한 목사", type: "pastor", pastorIdx: 0, pin: "0000" },
+      "PASTOR_CHOI": { name: "최호민 목사", type: "pastor", pastorIdx: 1, pin: "0000" },
+      "PASTOR_HO":   { name: "박호준 목사", type: "pastor", pastorIdx: 2, pin: "0000" },
 
-      "G_1_1": { name: "1교구 1구역", type: "group", groupName: "1교구 1구역", pin: "1111" },
-      "G_1_2": { name: "1교구 2구역", type: "group", groupName: "1교구 2구역", pin: "2222" },
-      "G_2_1": { name: "2교구 1구역", type: "group", groupName: "2교구 1구역", pin: "3333" },
-      "G_YOUTH": { name: "청년부 1셀", type: "group", groupName: "청년부 1셀", pin: "7777" }
+      // 소그룹 (구글 폼의 소그룹 이름과 부분 일치하여 필터링)
+      "G_1_MALE":    { name: "1남전도회_곽윤필",   type: "group", groupName: "1남전도회",   pin: "1001" },
+      "G_2_MALE":    { name: "2남전도회_최운재",   type: "group", groupName: "2남전도회",   pin: "1002" },
+      "G_SPRING":    { name: "봄길_서태범",       type: "group", groupName: "봄길",       pin: "1003" },
+      "G_FREEDOM":   { name: "주안에 자유_시희덕", type: "group", groupName: "주안에 자유", pin: "1004" },
+      "G_SHARON":    { name: "샤론_장군자",       type: "group", groupName: "샤론",       pin: "1005" },
+      "G_HARMONY":   { name: "화음_장수자",       type: "group", groupName: "화음",       pin: "1006" },
+      "G_IMMANUEL":  { name: "임마누엘_이화묵",   type: "group", groupName: "임마누엘",   pin: "1007" },
+      "G_EBENEZER":  { name: "에벤에셀_김영애",   type: "group", groupName: "에벤에셀",   pin: "1008" },
+      "G_EIRENE":    { name: "에이레네_이순종",   type: "group", groupName: "에이레네",   pin: "1009" },
+      "G_SHALOM":    { name: "샬롬_백영자",       type: "group", groupName: "샬롬",       pin: "1010" },
+      "G_FRAGRANCE": { name: "향기_이금지",       type: "group", groupName: "향기",       pin: "1011" },
+      "G_FORGET":    { name: "물망초_원봉선",     type: "group", groupName: "물망초",     pin: "1012" },
+      "G_WATERED":   { name: "물댄동산_김현정",   type: "group", groupName: "물댄동산",   pin: "1013" },
+      "G_REFRESH":   { name: "상큼이_김지나",     type: "group", groupName: "상큼이",     pin: "1014" }
     };
 
     // 50편 성경 구절
@@ -343,10 +365,9 @@
 
     const MOCK_DATA = {
       members: [
-        { id: 1, name: "김은혜", role: "권사", group: "1교구 1구역", date: "2026.08.15", type: "이번달 집중", content: "1. 자녀의 대학 입시와 믿음의 진로를 위해 기도합니다.\n2. 남편 사업장의 경제적 어려움이 회복되게 하소서." },
-        { id: 2, name: "박철민", role: "집사", group: "1교구 1구역", date: "2026.08.16", type: "응답시까지 지속", content: "1. 직장 내 직분자로서 빛과 소금의 역할을 감당하게 하소서.\n2. 양가 부모님의 건강과 영혼 구원을 위해 간구합니다." },
-        { id: 3, name: "이영희", role: "교우", group: "1교구 2구역", date: "2026.08.17", type: "이번달 집중", content: "1. 새로 시작하는 영아부 교사 사역에 은혜를 더하여 주소서.\n2. 온 가족이 주일 성수를 기쁨으로 지키게 하소서." },
-        { id: 4, name: "정요한", role: "청년", group: "청년부 1셀", date: "2026.08.18", type: "응답시까지 지속", content: "1. 비전과 진로를 결정하는 시기에 주님의 인도하심을 받게 하소서.\n2. 청년부 리더로서 말씀 중심의 공동체를 세워가게 하소서." }
+        { id: 1, name: "김은혜", role: "권사", group: "봄길_서태범", date: "2026.08.15", type: "이번달 집중", content: "1. 자녀의 대학 입시와 믿음의 진로를 위해 기도합니다.\n2. 남편 사업장의 경제적 어려움이 회복되게 하소서." },
+        { id: 2, name: "박철민", role: "집사", group: "1남전도회_곽윤필", date: "2026.08.16", type: "응답시까지 지속", content: "1. 직장 내 직분자로서 빛과 소금의 역할을 감당하게 하소서.\n2. 양가 부모님의 건강과 영혼 구원을 위해 간구합니다." },
+        { id: 3, name: "이영희", role: "교우", group: "샤론_장군자", date: "2026.08.17", type: "이번달 집중", content: "1. 새로 시작하는 영아부 교사 사역에 은혜를 더하여 주소서.\n2. 온 가족이 주일 성수를 기쁨으로 지키게 하소서." }
       ],
       patients: [
         { id: 101, name: "오성수", role: "집사", date: "2026.08.10", type: "항암 치료 중", content: "1. 3차 항암 치료 과정 중 부작용이 최소화되고 체력이 회복되게 하소서.\n2. 마음의 평안과 구원의 확신이 더욱 견고해지게 하소서." }
@@ -396,7 +417,6 @@
       updateWeekdayUI();
       updateRandomBibleVerse();
 
-      // 인증키 존재 여부 확인
       if (!state.groupKey || !GROUP_CONFIG[state.groupKey]) {
         openLoginModal();
       } else {
@@ -450,9 +470,11 @@
       if (config.type === 'pastor') {
         elHeaderUserInfo.textContent = `${config.name} (${dayText}요일)`;
         elTabMemberTitle.textContent = "전체 성도";
+        document.getElementById('weekday-container').style.display = 'flex';
       } else {
         elHeaderUserInfo.textContent = config.name;
         elTabMemberTitle.textContent = `${config.name} 기도`;
+        document.getElementById('weekday-container').style.display = 'none'; // 소그룹 모드 시 요일 바 숨김
       }
     }
 
@@ -477,7 +499,6 @@
       });
     }
 
-    // 소그룹 / 교역자 모드에 따른 데이터 필터링
     function filterDataByRotation() {
       if (state.category === 'patient') {
         state.activeList = state.data.patients || [];
