@@ -66,8 +66,8 @@
     }
 
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
     }
     ::-webkit-scrollbar-track {
       background: #0B132B;
@@ -76,67 +76,152 @@
       background: #3A506B;
       border-radius: 3px;
     }
+
+    /* ===================================================
+       스마트 가로 모드 (Landscape) 전용 초슬림 압축 레이아웃
+       =================================================== */
+    @media (orientation: landscape) and (max-height: 550px) {
+      /* 상단 별도 말씀 배너 숨기고 헤더 안으로 통합 */
+      #standalone-verse-banner {
+        display: none !important;
+      }
+      #header-inline-verse {
+        display: block !important;
+      }
+      #header-user-text {
+        display: none !important;
+      }
+      #main-container {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+        gap: 6px !important;
+      }
+      #category-tab-container {
+        margin-bottom: 0px !important;
+      }
+      #category-tab-container button {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+        font-size: 11px !important;
+      }
+      #card-touch-zone {
+        min-height: unset !important;
+        flex: 1 1 auto !important;
+      }
+      #prayer-card {
+        padding: 10px 16px !important;
+      }
+      /* 가로모드 카드 상단 1줄 가로 배치 */
+      #card-header-wrapper {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding-bottom: 6px !important;
+        margin-bottom: 6px !important;
+      }
+      #card-title-group {
+        flex-direction: row !important;
+        align-items: baseline !important;
+        gap: 8px !important;
+        margin-top: 0px !important;
+      }
+      #card-title-name {
+        font-size: 1.25rem !important;
+        line-height: 1.2 !important;
+      }
+      #card-title-role {
+        font-size: 0.875rem !important;
+      }
+      #card-body-scroll {
+        max-height: 140px !important;
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+        margin-top: 2px !important;
+        margin-bottom: 2px !important;
+      }
+      #card-content {
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+      }
+      #card-footer-box {
+        padding-top: 6px !important;
+      }
+      #footer-bar {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+      }
+      #footer-bar button {
+        height: 36px !important;
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+      }
+    }
   </style>
 </head>
 <body class="flex flex-col min-h-screen antialiased">
 
   <!-- 상단 헤더 -->
-  <header class="w-full bg-cardDark/95 backdrop-blur-md border-b border-accentNavy/40 px-4 py-2.5 flex items-center justify-between sticky top-0 z-40">
-    <div class="flex items-center space-x-2.5">
-      <img id="church-logo" src="./icon_prayer.png" alt="미명" class="h-8 w-8 rounded-lg object-cover shadow-sm border border-tealAccent/30" onError="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
-      <div id="logo-fallback" class="hidden text-tealAccent font-bold text-base tracking-wider">
-        동성교회
+  <header class="w-full bg-cardDark/95 backdrop-blur-md border-b border-accentNavy/40 px-3 sm:px-4 py-2 flex items-center justify-between sticky top-0 z-40">
+    <div class="flex items-center space-x-2.5 flex-1 min-w-0 mr-2">
+      <img id="church-logo" src="./icon_prayer.png" alt="미명" class="h-7 w-7 sm:h-8 sm:w-8 rounded-lg object-cover shadow-sm border border-tealAccent/30 flex-shrink-0" onError="this.style.display='none';">
+      
+      <div class="border-l border-accentNavy/60 pl-2.5 flex-shrink-0">
+        <h1 class="text-sm sm:text-base font-bold text-brightAqua leading-none tracking-wide">미명 <span class="text-xs font-normal text-tealAccent/80">(未明)</span></h1>
+        <p class="text-[9px] text-textLight/60 tracking-tight mt-0.5 hidden sm:block">새벽을 깨우는 중보기도</p>
       </div>
-      <div class="border-l border-accentNavy/60 pl-2.5">
-        <h1 class="text-base font-bold text-brightAqua leading-none tracking-wide">미명 <span class="text-xs font-normal text-tealAccent/80">(未明)</span></h1>
-        <p class="text-[9px] text-textLight/60 tracking-tight mt-0.5">새벽을 깨우는 중보기도</p>
+
+      <!-- 가로 모드 시 헤더 안에 1줄로 표시되는 성경말씀 -->
+      <div id="header-inline-verse" class="hidden flex-1 min-w-0 px-3 border-l border-accentNavy/50">
+        <p id="landscape-bible-verse" class="text-xs text-brightAqua font-serif truncate">
+          "새벽 아직도 밝기 전에 예수께서 일어나 나가 한적한 곳으로 가사 거기서 기도하시더니" (막 1:35)
+        </p>
       </div>
     </div>
 
     <!-- 소그룹/교역자 선택 버튼 -->
-    <button id="btn-open-login" class="px-2.5 py-1.5 rounded-lg bg-accentNavy/60 hover:bg-accentNavy text-xs text-textLight flex items-center space-x-1.5 transition border border-tealAccent/30">
-      <i class="fa-solid fa-lock text-tealAccent"></i>
-      <span id="header-user-info" class="font-medium truncate max-w-[140px]">소그룹 선택</span>
+    <button id="btn-open-login" class="px-2.5 py-1.5 rounded-lg bg-accentNavy/60 hover:bg-accentNavy text-xs text-textLight flex items-center space-x-1.5 transition border border-tealAccent/30 flex-shrink-0">
+      <i class="fa-solid fa-lock text-tealAccent text-xs"></i>
+      <span id="header-user-info" class="font-medium truncate max-w-[130px]">소그룹 선택</span>
     </button>
   </header>
 
   <!-- 2분 진행률 프로그레스 바 -->
-  <div class="w-full bg-accentNavy/30 h-1.5 sticky top-[53px] z-40 overflow-hidden">
+  <div class="w-full bg-accentNavy/30 h-1.5 sticky top-[49px] z-40 overflow-hidden">
     <div id="timer-progress" class="bg-gradient-to-r from-tealAccent to-brightAqua h-full w-0 transition-all duration-300 ease-linear"></div>
   </div>
 
-  <!-- 중앙 정렬 대형 성경구절 배너 -->
-  <div class="w-full bg-cardDark/50 border-b border-accentNavy/40 px-4 py-3 text-center z-20 shadow-inner">
+  <!-- 세로 모드 전용 대형 성경구절 배너 -->
+  <div id="standalone-verse-banner" class="w-full bg-cardDark/50 border-b border-accentNavy/40 px-4 py-2.5 text-center z-20 shadow-inner">
     <div class="max-w-2xl mx-auto flex flex-col items-center justify-center space-y-1">
-      <div class="flex items-center space-x-1 text-tealAccent text-[11px] font-semibold tracking-wider uppercase">
-        <i class="fa-solid fa-quote-left text-[9px]"></i>
+      <div class="flex items-center space-x-1 text-tealAccent text-[10px] font-semibold tracking-wider uppercase">
+        <i class="fa-solid fa-quote-left text-[8px]"></i>
         <span>오늘의 묵상 말씀</span>
-        <i class="fa-solid fa-quote-right text-[9px]"></i>
+        <i class="fa-solid fa-quote-right text-[8px]"></i>
       </div>
-      <p id="header-bible-verse" class="text-sm sm:text-base text-brightAqua font-medium leading-relaxed tracking-tight transition-opacity duration-500 font-serif px-2 word-keep">
+      <p id="header-bible-verse" class="text-xs sm:text-sm text-brightAqua font-medium leading-relaxed tracking-tight transition-opacity duration-500 font-serif px-2 word-keep">
         "새벽 아직도 밝기 전에 예수께서 일어나 나가 한적한 곳으로 가사 거기서 기도하시더니" (막 1:35)
       </p>
     </div>
   </div>
 
   <!-- 메인 스크롤 콘텐츠 영역 -->
-  <main class="flex-1 overflow-y-auto px-4 py-3 max-w-2xl w-full mx-auto flex flex-col justify-start space-y-3 z-10">
+  <main id="main-container" class="flex-1 overflow-y-auto px-3 sm:px-4 py-2.5 max-w-3xl w-full mx-auto flex flex-col justify-start space-y-2.5 z-10">
 
     <!-- 기도 카테고리 탭 -->
-    <div class="w-full flex bg-cardDark/90 p-1 rounded-xl border border-accentNavy/40 text-xs sm:text-sm z-20">
-      <button id="tab-member" class="flex-1 py-2 rounded-lg font-medium transition text-center text-brightAqua bg-accentNavy/80 shadow">
+    <div id="category-tab-container" class="w-full flex bg-cardDark/90 p-1 rounded-xl border border-accentNavy/40 text-xs sm:text-sm z-20">
+      <button id="tab-member" class="flex-1 py-1.5 sm:py-2 rounded-lg font-medium transition text-center text-brightAqua bg-accentNavy/80 shadow">
         <i class="fa-solid fa-users text-xs mr-1"></i><span id="tab-member-title">소그룹 기도</span>
       </button>
-      <button id="tab-patient" class="flex-1 py-2 rounded-lg font-medium transition text-center text-textLight/60 hover:text-textLight">
+      <button id="tab-patient" class="flex-1 py-1.5 sm:py-2 rounded-lg font-medium transition text-center text-textLight/60 hover:text-textLight">
         <i class="fa-solid fa-heart-pulse text-xs mr-1"></i>환우 집중
       </button>
-      <button id="tab-mission" class="flex-1 py-2 rounded-lg font-medium transition text-center text-textLight/60 hover:text-textLight">
+      <button id="tab-mission" class="flex-1 py-1.5 sm:py-2 rounded-lg font-medium transition text-center text-textLight/60 hover:text-textLight">
         <i class="fa-solid fa-earth-asia text-xs mr-1"></i>선교·협력
       </button>
     </div>
 
     <!-- 기도 카드 터치 영역 -->
-    <div id="card-touch-zone" class="relative w-full min-h-[360px] sm:min-h-[420px] flex flex-col justify-center items-center cursor-pointer select-none">
+    <div id="card-touch-zone" class="relative w-full min-h-[340px] sm:min-h-[400px] flex flex-col justify-center items-center cursor-pointer select-none">
       
       <div class="absolute left-0 top-0 bottom-0 w-[30%] z-20 opacity-0 hover:opacity-10 transition-opacity bg-tealAccent/20 rounded-l-2xl flex items-center justify-start pl-2 pointer-events-none">
         <i class="fa-solid fa-chevron-left text-2xl text-brightAqua"></i>
@@ -146,10 +231,10 @@
       </div>
 
       <!-- 실제 기도 카드 -->
-      <div id="prayer-card" class="w-full bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative">
+      <div id="prayer-card" class="w-full bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative">
         
-        <!-- 카드 상단 정보 영역 -->
-        <div class="border-b border-accentNavy/40 pb-3 mb-3">
+        <!-- 카드 상단 헤더 영역 (가로 모드에서는 1줄 완전 통합) -->
+        <div id="card-header-wrapper" class="border-b border-accentNavy/40 pb-2.5 mb-2.5 flex flex-col">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
               <span id="card-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-tealAccent/20 text-brightAqua border border-tealAccent/40 word-keep">
@@ -159,13 +244,13 @@
                 등록일
               </span>
             </div>
-            <span id="card-counter" class="text-xs font-mono px-2 py-1 bg-bgDark/80 rounded-lg text-brightAqua border border-accentNavy/40">
+            <span id="card-counter" class="text-xs font-mono px-2 py-0.5 bg-bgDark/80 rounded-lg text-brightAqua border border-accentNavy/40">
               0 / 0
             </span>
           </div>
 
-          <!-- 이름/국가명 및 직분/담당자 영역 -->
-          <div class="mt-2.5 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+          <!-- 이름/국가 및 직분/담당자 -->
+          <div id="card-title-group" class="mt-2 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
             <h2 id="card-title-name" class="text-2xl sm:text-3xl font-bold text-textLight word-keep leading-tight">
               로딩 중
             </h2>
@@ -175,14 +260,14 @@
         </div>
 
         <!-- 본문 내용 -->
-        <div id="card-body-scroll" class="overflow-y-auto max-h-[260px] sm:max-h-[300px] py-2 pr-1 my-2">
-          <p id="card-content" class="text-lg sm:text-xl text-textLight/95 leading-relaxed font-normal whitespace-pre-line tracking-wide word-keep">
+        <div id="card-body-scroll" class="overflow-y-auto max-h-[220px] sm:max-h-[280px] py-1 pr-1 my-1">
+          <p id="card-content" class="text-base sm:text-lg text-textLight/95 leading-relaxed font-normal whitespace-pre-line tracking-wide word-keep">
             기도제목 데이터를 불러오는 중입니다...
           </p>
         </div>
 
         <!-- 카드 하단 타이머 -->
-        <div class="pt-3 border-t border-accentNavy/40 flex items-center justify-between text-xs text-textLight/70">
+        <div id="card-footer-box" class="pt-2.5 border-t border-accentNavy/40 flex items-center justify-between text-xs text-textLight/70">
           <div class="flex items-center space-x-1.5">
             <i class="fa-regular fa-clock text-tealAccent"></i>
             <span>권장 기도시간 2분</span>
@@ -198,79 +283,71 @@
 
     <!-- 하단 평일 요일 선택 바 -->
     <div id="weekday-container" class="w-full flex bg-cardDark/60 p-1 rounded-xl border border-accentNavy/30 text-xs">
-      <button data-weekday="1" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">월</button>
-      <button data-weekday="2" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">화</button>
-      <button data-weekday="3" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">수</button>
-      <button data-weekday="4" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">목</button>
-      <button data-weekday="5" class="btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/60">금</button>
+      <button data-weekday="1" class="btn-weekday flex-1 py-1 rounded-lg font-semibold transition text-center text-textLight/60">월</button>
+      <button data-weekday="2" class="btn-weekday flex-1 py-1 rounded-lg font-semibold transition text-center text-textLight/60">화</button>
+      <button data-weekday="3" class="btn-weekday flex-1 py-1 rounded-lg font-semibold transition text-center text-textLight/60">수</button>
+      <button data-weekday="4" class="btn-weekday flex-1 py-1 rounded-lg font-semibold transition text-center text-textLight/60">목</button>
+      <button data-weekday="5" class="btn-weekday flex-1 py-1 rounded-lg font-semibold transition text-center text-textLight/60">금</button>
     </div>
-
-    <p class="text-[11px] text-textLight/40 text-center pb-2">
-      <i class="fa-solid fa-hand-pointer mr-1"></i>좌측 30% 터치: 이전 | 우측 70% 터치: 다음 (스와이프 지원)
-    </p>
 
   </main>
 
   <!-- 하단 고정 컨트롤 바 -->
-  <footer class="w-full bg-cardDark/95 border-t border-accentNavy/40 px-4 py-2.5 sticky bottom-0 z-40">
+  <footer id="footer-bar" class="w-full bg-cardDark/95 border-t border-accentNavy/40 px-3 sm:px-4 py-2 sticky bottom-0 z-40">
     <div class="max-w-2xl mx-auto flex items-center justify-between">
-      <button id="btn-prev" class="w-11 h-11 rounded-xl bg-accentNavy/40 hover:bg-accentNavy/80 text-brightAqua flex items-center justify-center transition active:scale-95">
-        <i class="fa-solid fa-chevron-left text-lg"></i>
+      <button id="btn-prev" class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-accentNavy/40 hover:bg-accentNavy/80 text-brightAqua flex items-center justify-center transition active:scale-95">
+        <i class="fa-solid fa-chevron-left text-base sm:text-lg"></i>
       </button>
 
-      <button id="btn-toggle-timer" class="px-4 py-2.5 rounded-xl bg-tealAccent/20 hover:bg-tealAccent/30 text-brightAqua border border-tealAccent/40 flex items-center space-x-2 transition active:scale-95">
-        <i id="timer-icon" class="fa-solid fa-pause text-sm"></i>
+      <button id="btn-toggle-timer" class="px-3.5 py-2 rounded-xl bg-tealAccent/20 hover:bg-tealAccent/30 text-brightAqua border border-tealAccent/40 flex items-center space-x-2 transition active:scale-95">
+        <i id="timer-icon" class="fa-solid fa-pause text-xs"></i>
         <span id="timer-btn-text" class="text-xs font-medium">일시정지</span>
       </button>
 
-      <button id="btn-toggle-auto" class="px-3 py-2.5 rounded-xl bg-accentNavy/30 border border-accentNavy/50 text-xs text-textLight/70 flex items-center space-x-1.5 transition">
-        <i id="auto-icon" class="fa-solid fa-toggle-on text-tealAccent text-sm"></i>
+      <button id="btn-toggle-auto" class="px-3 py-2 rounded-xl bg-accentNavy/30 border border-accentNavy/50 text-xs text-textLight/70 flex items-center space-x-1.5 transition">
+        <i id="auto-icon" class="fa-solid fa-toggle-on text-tealAccent text-xs"></i>
         <span>자동넘김</span>
       </button>
 
-      <button id="btn-next" class="w-11 h-11 rounded-xl bg-tealAccent text-bgDark font-bold flex items-center justify-center shadow-lg hover:bg-brightAqua transition active:scale-95">
-        <i class="fa-solid fa-chevron-right text-lg"></i>
+      <button id="btn-next" class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-tealAccent text-bgDark font-bold flex items-center justify-center shadow-lg hover:bg-brightAqua transition active:scale-95">
+        <i class="fa-solid fa-chevron-right text-base sm:text-lg"></i>
       </button>
     </div>
   </footer>
 
-  <!-- 소그룹 / 교역자 선택 & 비밀번호 모달 -->
+  <!-- 소그룹 / 교역자 선택 & 비밀번호 모달 (카테고리 구분선 완전 삭제) -->
   <div id="modal-login" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-cardDark border border-accentNavy rounded-2xl w-full max-w-md p-6 shadow-2xl relative space-y-4">
       
       <div class="text-center border-b border-accentNavy/50 pb-3">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-tealAccent/20 text-brightAqua mb-2">
-          <i class="fa-solid fa-church text-xl"></i>
+        <div class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-tealAccent/20 text-brightAqua mb-2">
+          <i class="fa-solid fa-church text-lg"></i>
         </div>
         <h3 class="text-lg font-bold text-brightAqua">소그룹 및 교역자 인증</h3>
         <p class="text-xs text-textLight/60 mt-1">소속 소그룹 또는 담당 교역자를 선택해 주세요.</p>
       </div>
 
-      <!-- 그룹 선택 드롭다운 -->
+      <!-- 불필요한 태그/optgroup을 완전히 없앤 깔끔한 단일 리스트 -->
       <div class="space-y-1.5">
         <label class="text-xs font-semibold text-tealAccent">1. 소속 선택</label>
         <select id="select-group-key" class="w-full bg-bgDark border border-accentNavy rounded-xl px-3 py-2.5 text-sm text-textLight focus:outline-none focus:border-tealAccent">
-          <optgroup label="[ 교역자 전용 (전체 성도 기도) ]">
-            <option value="PASTOR_PARK">박태한 목사</option>
-            <option value="PASTOR_CHOI">최호민 목사</option>
-            <option value="PASTOR_HO">박호준 목사</option>
-          </optgroup>
-          <optgroup label="[ 성도 소그룹 / 남전도회 ]">
-            <option value="G_1_MALE">1남전도회_곽윤필</option>
-            <option value="G_2_MALE">2남전도회_최운재</option>
-            <option value="G_SPRING">봄길_서태범</option>
-            <option value="G_FREEDOM">주안에 자유_시희덕</option>
-            <option value="G_SHARON">샤론_장군자</option>
-            <option value="G_HARMONY">화음_장수자</option>
-            <option value="G_IMMANUEL">임마누엘_이화묵</option>
-            <option value="G_EBENEZER">에벤에셀_김영애</option>
-            <option value="G_EIRENE">에이레네_이순종</option>
-            <option value="G_SHALOM">샬롬_백영자</option>
-            <option value="G_FRAGRANCE">향기_이금지</option>
-            <option value="G_FORGET">물망초_원봉선</option>
-            <option value="G_WATERED">물댄동산_김현정</option>
-            <option value="G_REFRESH">상큼이_김지나</option>
-          </optgroup>
+          <option value="PASTOR_PARK">박태한 목사</option>
+          <option value="PASTOR_CHOI">최호민 목사</option>
+          <option value="PASTOR_HO">박호준 목사</option>
+          <option value="G_1_MALE">1남전도회_곽윤필</option>
+          <option value="G_2_MALE">2남전도회_최운재</option>
+          <option value="G_SPRING">봄길_서태범</option>
+          <option value="G_FREEDOM">주안에 자유_시희덕</option>
+          <option value="G_SHARON">샤론_장군자</option>
+          <option value="G_HARMONY">화음_장수자</option>
+          <option value="G_IMMANUEL">임마누엘_이화묵</option>
+          <option value="G_EBENEZER">에벤에셀_김영애</option>
+          <option value="G_EIRENE">에이레네_이순종</option>
+          <option value="G_SHALOM">샬롬_백영자</option>
+          <option value="G_FRAGRANCE">향기_이금지</option>
+          <option value="G_FORGET">물망초_원봉선</option>
+          <option value="G_WATERED">물댄동산_김현정</option>
+          <option value="G_REFRESH">상큼이_김지나</option>
         </select>
       </div>
 
@@ -281,7 +358,6 @@
         <p id="pin-error-msg" class="text-xs text-red-400 hidden text-center font-medium mt-1">비밀번호가 일치하지 않습니다.</p>
       </div>
 
-      <!-- 로그인 확인 버튼 -->
       <button id="btn-submit-login" class="w-full py-3 rounded-xl bg-gradient-to-r from-tealAccent to-brightAqua text-bgDark font-bold text-sm shadow-lg hover:opacity-95 transition">
         확인 및 기도 시작
       </button>
@@ -293,7 +369,7 @@
   <script>
     const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec";
 
-    // 소그룹 및 교역자 설정 (4자리 PIN 번호)
+    // 소그룹 및 교역자 PIN 설정
     const GROUP_CONFIG = {
       "PASTOR_PARK": { name: "박태한 목사", type: "pastor", pastorIdx: 0, pin: "0000" },
       "PASTOR_CHOI": { name: "최호민 목사", type: "pastor", pastorIdx: 1, pin: "0000" },
@@ -315,7 +391,6 @@
       "G_REFRESH":   { name: "상큼이_김지나",     type: "group", groupName: "상큼이",     pin: "1014" }
     };
 
-    // 50편 성경 구절
     const BIBLE_VERSES = [
       "\"새벽 아직도 밝기 전에 예수께서 일어나 나가 한적한 곳으로 가사 거기서 기도하시더니\" (막 1:35)",
       "\"여호와여 아침에 주께서 나의 소리를 들으시리니 아침에 내가 주께 기도하고 바라리이다\" (시 5:3)",
@@ -378,7 +453,7 @@
         { id: 101, name: "오성수", role: "집사", date: "2026.08.10", type: "항암 치료 중", content: "1. 3차 항암 치료 과정 중 부작용이 최소화되고 체력이 회복되게 하소서.\n2. 마음의 평안과 구원의 확신이 더욱 견고해지게 하소서." }
       ],
       missions: [
-        { id: 201, name: "캄보디아", role: "박영웅/박혜원 선교사", date: "2026.08.01", type: "선교사", content: "1. 다음 세대 사역과 교육 선교의 지경이 열리도록\n2. 가정이 늘 은혜 안에 거하도록" }
+        { id: 201, name: "가지교회", role: "고재만 목사", date: "2026.08.01", type: "동역교회", content: "1. 교회의 영적 부흥과 지역 사회를 섬기는 복음의 통로가 되도록\n2. 성도들의 가정이 믿음 안에서 든든히 세워지도록" }
       ]
     };
 
@@ -415,6 +490,7 @@
     const elProgressBar = document.getElementById('timer-progress');
     const elHeaderUserInfo = document.getElementById('header-user-info');
     const elBibleVerse = document.getElementById('header-bible-verse');
+    const elLandscapeVerse = document.getElementById('landscape-bible-verse');
     const elTabMemberTitle = document.getElementById('tab-member-title');
 
     async function initApp() {
@@ -478,28 +554,34 @@
         document.getElementById('weekday-container').style.display = 'flex';
       } else {
         elHeaderUserInfo.textContent = config.name;
-        elTabMemberTitle.textContent = "소그룹 기도"; // 깔끔하게 "소그룹 기도"로 고정
+        elTabMemberTitle.textContent = "소그룹 기도";
         document.getElementById('weekday-container').style.display = 'none';
       }
     }
 
     function updateRandomBibleVerse() {
-      if (!elBibleVerse) return;
-      elBibleVerse.style.opacity = '0';
-      setTimeout(() => {
-        const randomIndex = Math.floor(Math.random() * BIBLE_VERSES.length);
-        elBibleVerse.textContent = BIBLE_VERSES[randomIndex];
-        elBibleVerse.style.opacity = '1';
-      }, 250);
+      const randomIndex = Math.floor(Math.random() * BIBLE_VERSES.length);
+      const verse = BIBLE_VERSES[randomIndex];
+
+      if (elBibleVerse) {
+        elBibleVerse.style.opacity = '0';
+        setTimeout(() => {
+          elBibleVerse.textContent = verse;
+          elBibleVerse.style.opacity = '1';
+        }, 200);
+      }
+      if (elLandscapeVerse) {
+        elLandscapeVerse.textContent = verse;
+      }
     }
 
     function updateWeekdayUI() {
       document.querySelectorAll('.btn-weekday').forEach(btn => {
         const d = parseInt(btn.dataset.weekday);
         if (d === state.currentWeekday) {
-          btn.className = 'btn-weekday flex-1 py-1.5 rounded-lg font-bold transition text-center text-brightAqua bg-accentNavy/90 shadow border border-tealAccent/40';
+          btn.className = 'btn-weekday flex-1 py-1 rounded-lg font-bold transition text-center text-brightAqua bg-accentNavy/90 shadow border border-tealAccent/40';
         } else {
-          btn.className = 'btn-weekday flex-1 py-1.5 rounded-lg font-semibold transition text-center text-textLight/50 hover:text-textLight';
+          btn.className = 'btn-weekday flex-1 py-1 rounded-lg font-semibold transition text-center text-textLight/50 hover:text-textLight';
         }
       });
     }
@@ -668,10 +750,10 @@
         const icon = document.getElementById('timer-icon');
         const text = document.getElementById('timer-btn-text');
         if (state.isPaused) {
-          icon.className = 'fa-solid fa-play text-sm';
+          icon.className = 'fa-solid fa-play text-xs';
           text.textContent = '재생';
         } else {
-          icon.className = 'fa-solid fa-pause text-sm';
+          icon.className = 'fa-solid fa-pause text-xs';
           text.textContent = '일시정지';
         }
       });
@@ -679,7 +761,7 @@
       document.getElementById('btn-toggle-auto').addEventListener('click', () => {
         state.autoAdvance = !state.autoAdvance;
         const icon = document.getElementById('auto-icon');
-        icon.className = state.autoAdvance ? 'fa-solid fa-toggle-on text-tealAccent text-sm' : 'fa-solid fa-toggle-off text-textLight/40 text-sm';
+        icon.className = state.autoAdvance ? 'fa-solid fa-toggle-on text-tealAccent text-xs' : 'fa-solid fa-toggle-off text-textLight/40 text-xs';
       });
 
       const touchZone = document.getElementById('card-touch-zone');
@@ -714,9 +796,9 @@
       state.category = cat;
       const tabs = [document.getElementById('tab-member'), document.getElementById('tab-patient'), document.getElementById('tab-mission')];
       tabs.forEach(tab => {
-        tab.className = 'flex-1 py-2 rounded-lg font-medium transition text-center text-textLight/60 hover:text-textLight';
+        tab.className = 'flex-1 py-1.5 sm:py-2 rounded-lg font-medium transition text-center text-textLight/60 hover:text-textLight';
       });
-      targetBtn.className = 'flex-1 py-2 rounded-lg font-medium transition text-center text-brightAqua bg-accentNavy/80 shadow';
+      targetBtn.className = 'flex-1 py-1.5 sm:py-2 rounded-lg font-medium transition text-center text-brightAqua bg-accentNavy/80 shadow';
       filterDataByRotation();
       updateRandomBibleVerse();
     }
