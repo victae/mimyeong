@@ -51,7 +51,6 @@
       min-height: 100%;
     }
 
-    /* 단어 단위 줄바꿈 공통 적용 (음절 단위 쪼개짐 방지) */
     .word-keep {
       word-break: keep-all;
       overflow-wrap: break-word;
@@ -97,7 +96,7 @@
     <!-- 소그룹/교역자 선택 버튼 -->
     <button id="btn-open-login" class="px-2.5 py-1.5 rounded-lg bg-accentNavy/60 hover:bg-accentNavy text-xs text-textLight flex items-center space-x-1.5 transition border border-tealAccent/30">
       <i class="fa-solid fa-lock text-tealAccent"></i>
-      <span id="header-user-info" class="font-medium">소그룹 선택</span>
+      <span id="header-user-info" class="font-medium truncate max-w-[140px]">소그룹 선택</span>
     </button>
   </header>
 
@@ -126,7 +125,7 @@
     <!-- 기도 카테고리 탭 -->
     <div class="w-full flex bg-cardDark/90 p-1 rounded-xl border border-accentNavy/40 text-xs sm:text-sm z-20">
       <button id="tab-member" class="flex-1 py-2 rounded-lg font-medium transition text-center text-brightAqua bg-accentNavy/80 shadow">
-        <i class="fa-solid fa-users text-xs mr-1"></i><span id="tab-member-title">성도 기도</span>
+        <i class="fa-solid fa-users text-xs mr-1"></i><span id="tab-member-title">소그룹 기도</span>
       </button>
       <button id="tab-patient" class="flex-1 py-2 rounded-lg font-medium transition text-center text-textLight/60 hover:text-textLight">
         <i class="fa-solid fa-heart-pulse text-xs mr-1"></i>환우 집중
@@ -149,7 +148,7 @@
       <!-- 실제 기도 카드 -->
       <div id="prayer-card" class="w-full bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative">
         
-        <!-- 카드 상단 정보 영역 (단어 단위 줄바꿈 + 상하 정렬 개선) -->
+        <!-- 카드 상단 정보 영역 -->
         <div class="border-b border-accentNavy/40 pb-3 mb-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
@@ -165,7 +164,7 @@
             </span>
           </div>
 
-          <!-- 이름/국가명 및 직분/담당자 영역 (word-keep 적용으로 쪼개짐 방지) -->
+          <!-- 이름/국가명 및 직분/담당자 영역 -->
           <div class="mt-2.5 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
             <h2 id="card-title-name" class="text-2xl sm:text-3xl font-bold text-textLight word-keep leading-tight">
               로딩 중
@@ -175,7 +174,7 @@
           </div>
         </div>
 
-        <!-- 본문 내용 (word-keep 적용) -->
+        <!-- 본문 내용 -->
         <div id="card-body-scroll" class="overflow-y-auto max-h-[260px] sm:max-h-[300px] py-2 pr-1 my-2">
           <p id="card-content" class="text-lg sm:text-xl text-textLight/95 leading-relaxed font-normal whitespace-pre-line tracking-wide word-keep">
             기도제목 데이터를 불러오는 중입니다...
@@ -294,7 +293,7 @@
   <script>
     const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec";
 
-    // 소그룹 및 교역자 비밀번호 설정
+    // 소그룹 및 교역자 설정 (4자리 PIN 번호)
     const GROUP_CONFIG = {
       "PASTOR_PARK": { name: "박태한 목사", type: "pastor", pastorIdx: 0, pin: "0000" },
       "PASTOR_CHOI": { name: "최호민 목사", type: "pastor", pastorIdx: 1, pin: "0000" },
@@ -479,7 +478,7 @@
         document.getElementById('weekday-container').style.display = 'flex';
       } else {
         elHeaderUserInfo.textContent = config.name;
-        elTabMemberTitle.textContent = `${config.name} 기도`;
+        elTabMemberTitle.textContent = "소그룹 기도"; // 깔끔하게 "소그룹 기도"로 고정
         document.getElementById('weekday-container').style.display = 'none';
       }
     }
@@ -563,13 +562,8 @@
       const item = state.activeList[state.currentIndex];
       elBadge.textContent = item.type || (item.group ? item.group : "중보기도");
       elSubInfo.textContent = item.date || "";
-      
-      // 이름 및 국가명
       elName.textContent = item.name || "무명";
-      
-      // 직분 및 담당자명 (선교사/사역자)
       elRole.textContent = item.role || "";
-      
       elCounter.textContent = `${state.currentIndex + 1} / ${state.activeList.length}`;
       elContent.textContent = item.content || "";
 
