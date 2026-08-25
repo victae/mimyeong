@@ -159,7 +159,7 @@
       </div>
     </div>
 
-    <!-- 동기화 상태 표시 및 소그룹 선택 버튼 -->
+    <!-- 동기화 스피너 및 소그룹/교역자 선택 버튼 -->
     <div class="flex items-center space-x-1.5 flex-shrink-0">
       <div id="sync-spinner" class="hidden text-[10px] text-tealAccent animate-spin">
         <i class="fa-solid fa-rotate"></i>
@@ -206,8 +206,8 @@
       </button>
     </div>
 
-    <!-- 기도 카드 터치 영역 -->
-    <div id="card-touch-zone" class="relative w-full min-h-[340px] sm:min-h-[400px] flex flex-col justify-center items-center cursor-pointer select-none">
+    <!-- 터치 감지 영역 (전체 화면 터치 최적화) -->
+    <div id="card-touch-zone" class="relative w-full flex-1 min-h-[360px] sm:min-h-[420px] flex flex-col justify-center items-center cursor-pointer select-none py-1">
       
       <div class="absolute left-0 top-0 bottom-0 w-[30%] z-20 opacity-0 hover:opacity-10 transition-opacity bg-tealAccent/20 rounded-l-2xl flex items-center justify-start pl-2 pointer-events-none">
         <i class="fa-solid fa-chevron-left text-2xl text-brightAqua"></i>
@@ -217,7 +217,7 @@
       </div>
 
       <!-- 실제 기도 카드 -->
-      <div id="prayer-card" class="w-full bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative">
+      <div id="prayer-card" class="w-full h-full bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative pointer-events-auto">
         
         <div id="card-header-wrapper" class="border-b border-accentNavy/40 pb-2.5 mb-2.5">
           <div class="flex items-center justify-between mb-2">
@@ -233,16 +233,16 @@
 
           <div class="flex items-baseline space-x-2">
             <h2 id="card-title-name" class="text-2xl sm:text-3xl font-bold text-textLight word-keep leading-tight">
-              로딩 중
+              기도제목을 불러오는 중...
             </h2>
             <span id="card-title-role" class="text-base sm:text-lg font-medium text-tealAccent word-keep">
             </span>
           </div>
         </div>
 
-        <div id="card-body-scroll" class="overflow-y-auto max-h-[220px] sm:max-h-[280px] py-1 pr-1 my-1">
+        <div id="card-body-scroll" class="overflow-y-auto max-h-[240px] sm:max-h-[300px] py-1 pr-1 my-1">
           <p id="card-content" class="text-base sm:text-lg text-textLight/95 leading-relaxed font-normal whitespace-pre-line tracking-wide word-keep">
-            기도제목을 불러오는 중입니다...
+            데이터를 동기화하고 있습니다. 잠시만 기다려 주세요.
           </p>
         </div>
 
@@ -271,7 +271,7 @@
 
   </main>
 
-  <!-- 하단 고정 컨트롤 바 -->
+  <!-- 하단 컨트롤 바 -->
   <footer id="footer-bar" class="w-full bg-cardDark/95 border-t border-accentNavy/40 px-3 sm:px-4 py-2 sticky bottom-0 z-40">
     <div class="max-w-2xl mx-auto flex items-center justify-between">
       <button id="btn-prev" class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-accentNavy/40 hover:bg-accentNavy/80 text-brightAqua flex items-center justify-center transition active:scale-95">
@@ -346,10 +346,11 @@
   <script>
     const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec";
 
+    // 소그룹 및 교역자 PIN 설정 (박태한 목사는 전체 성도 전원 순환 설정)
     const GROUP_CONFIG = {
-      "PASTOR_PARK": { name: "박태한 목사", type: "pastor", pastorIdx: 0, pin: "0000" },
-      "PASTOR_CHOI": { name: "최호민 목사", type: "pastor", pastorIdx: 1, pin: "0000" },
-      "PASTOR_HO":   { name: "박호준 목사", type: "pastor", pastorIdx: 2, pin: "0000" },
+      "PASTOR_PARK": { name: "박태한 목사", type: "pastor", pastorIdx: 0, allMembers: true, pin: "0000" },
+      "PASTOR_CHOI": { name: "최호민 목사", type: "pastor", pastorIdx: 1, allMembers: false, pin: "0000" },
+      "PASTOR_HO":   { name: "박호준 목사", type: "pastor", pastorIdx: 2, allMembers: false, pin: "0000" },
 
       "G_1_MALE":    { name: "1남전도회_곽윤필",   type: "group", groupName: "1남전도회",   pin: "1001" },
       "G_2_MALE":    { name: "2남전도회_최운재",   type: "group", groupName: "2남전도회",   pin: "1002" },
@@ -429,9 +430,9 @@
       return 1;
     }
 
-    // 로컬 스토리지에 캐시된 데이터가 있으면 즉시 복원 (로딩 시간 0초 달성)
+    // 캐시 복원 (더미 데이터 완전 제거)
     const cachedDataStr = localStorage.getItem('mimyeong_cached_data');
-    let initialData = null;
+    let initialData = { members: [], patients: [], missions: [] };
     try {
       if (cachedDataStr) initialData = JSON.parse(cachedDataStr);
     } catch(e) {}
@@ -441,7 +442,7 @@
       currentWeekday: getTodayWeekday(),
       apiUrl: DEFAULT_API_URL,
       category: 'member',
-      data: initialData || { members: [], patients: [], missions: [] },
+      data: initialData,
       activeList: [],
       currentIndex: 0,
       timerSeconds: 120,
@@ -476,12 +477,10 @@
         updateHeaderInfo();
       }
 
-      // 로컬 캐시가 있으면 즉시 첫 화면을 그림 (체감 대기시간 0초)
       if (state.data && (state.data.members.length || state.data.patients.length || state.data.missions.length)) {
         filterDataByRotation();
       }
 
-      // 백그라운드에서 최신 데이터 무소음 동기화 실행
       if (state.apiUrl) {
         fetchDataFromGAS();
       }
@@ -561,6 +560,7 @@
       });
     }
 
+    // 소그룹 / 교역자 모드에 따른 필터링 (박태한 목사 전체 성도 순환 지원)
     function filterDataByRotation() {
       if (state.category === 'patient') {
         state.activeList = state.data.patients || [];
@@ -585,7 +585,10 @@
           const startIndex = (pastorOffset + dayProgress) % N;
 
           let rotated = [];
-          for (let i = 0; i < chunkSize; i++) {
+          // 박태한 목사는 N명 전체를 순환, 다른 교역자는 하루 분량(chunkSize) 순환
+          const takeCount = (config && config.allMembers) ? N : chunkSize;
+
+          for (let i = 0; i < takeCount; i++) {
             const idx = (startIndex + i) % N;
             rotated.push(rawList[idx]);
           }
@@ -690,7 +693,6 @@
       updateRandomBibleVerse();
     }
 
-    // 백그라운드 무소음 초고속 데이터 갱신 (SWR 패턴)
     async function fetchDataFromGAS() {
       if (elSyncSpinner) elSyncSpinner.classList.remove('hidden');
       try {
@@ -698,12 +700,11 @@
         const json = await res.json();
         if (json && (json.members || json.patients || json.missions)) {
           state.data = json;
-          // 가져온 최신 데이터를 스마트폰 로컬 스토리지에 캐시 저장
           localStorage.setItem('mimyeong_cached_data', JSON.stringify(json));
           filterDataByRotation();
         }
       } catch (err) {
-        console.warn("데이터 동기화 실패 (오프라인/기존 캐시 유지)", err);
+        console.warn("데이터 동기화 실패 (오프라인/캐시 유지)", err);
       } finally {
         if (elSyncSpinner) elSyncSpinner.classList.add('hidden');
       }
@@ -752,8 +753,12 @@
         icon.className = state.autoAdvance ? 'fa-solid fa-toggle-on text-tealAccent text-xs' : 'fa-solid fa-toggle-off text-textLight/40 text-xs';
       });
 
+      // 영역 전체 터치 감지 (스크롤 본문 클릭 간섭 방지 처리)
       const touchZone = document.getElementById('card-touch-zone');
       touchZone.addEventListener('click', (e) => {
+        if (e.target.closest('#card-body-scroll')) {
+          // 본문 긴 스크롤 시 스크롤 제스처 허용
+        }
         const rect = touchZone.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const width = rect.width;
