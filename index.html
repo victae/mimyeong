@@ -77,7 +77,6 @@
       border-radius: 3px;
     }
 
-    /* 가로 모드 (Landscape) 전용 초슬림 압축 레이아웃 */
     @media (orientation: landscape) and (max-height: 550px) {
       #standalone-verse-banner {
         display: none !important;
@@ -153,7 +152,6 @@
         <p class="text-[9px] text-textLight/60 tracking-tight mt-0.5 hidden sm:block">새벽을 깨우는 중보기도</p>
       </div>
 
-      <!-- 가로 모드 시 헤더 안에 1줄로 표시되는 성경말씀 -->
       <div id="header-inline-verse" class="hidden flex-1 min-w-0 px-3 border-l border-accentNavy/50">
         <p id="landscape-bible-verse" class="text-xs text-brightAqua font-serif truncate">
           "새벽 아직도 밝기 전에 예수께서 일어나 나가 한적한 곳으로 가사 거기서 기도하시더니" (막 1:35)
@@ -161,11 +159,16 @@
       </div>
     </div>
 
-    <!-- 소그룹/교역자 선택 버튼 -->
-    <button id="btn-open-login" class="px-2.5 py-1.5 rounded-lg bg-accentNavy/60 hover:bg-accentNavy text-xs text-textLight flex items-center space-x-1.5 transition border border-tealAccent/30 flex-shrink-0">
-      <i class="fa-solid fa-lock text-tealAccent text-xs"></i>
-      <span id="header-user-info" class="font-medium truncate max-w-[130px]">소그룹 선택</span>
-    </button>
+    <!-- 동기화 상태 표시 및 소그룹 선택 버튼 -->
+    <div class="flex items-center space-x-1.5 flex-shrink-0">
+      <div id="sync-spinner" class="hidden text-[10px] text-tealAccent animate-spin">
+        <i class="fa-solid fa-rotate"></i>
+      </div>
+      <button id="btn-open-login" class="px-2.5 py-1.5 rounded-lg bg-accentNavy/60 hover:bg-accentNavy text-xs text-textLight flex items-center space-x-1.5 transition border border-tealAccent/30">
+        <i class="fa-solid fa-lock text-tealAccent text-xs"></i>
+        <span id="header-user-info" class="font-medium truncate max-w-[130px]">소그룹 선택</span>
+      </button>
+    </div>
   </header>
 
   <!-- 2분 진행률 프로그레스 바 -->
@@ -216,7 +219,6 @@
       <!-- 실제 기도 카드 -->
       <div id="prayer-card" class="w-full bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative">
         
-        <!-- 카드 상단 정보 영역 -->
         <div id="card-header-wrapper" class="border-b border-accentNavy/40 pb-2.5 mb-2.5">
           <div class="flex items-center justify-between mb-2">
             <div>
@@ -229,7 +231,6 @@
             </span>
           </div>
 
-          <!-- 이름 + 직분 한 줄 결합 영역 -->
           <div class="flex items-baseline space-x-2">
             <h2 id="card-title-name" class="text-2xl sm:text-3xl font-bold text-textLight word-keep leading-tight">
               로딩 중
@@ -239,14 +240,12 @@
           </div>
         </div>
 
-        <!-- 본문 내용 -->
         <div id="card-body-scroll" class="overflow-y-auto max-h-[220px] sm:max-h-[280px] py-1 pr-1 my-1">
           <p id="card-content" class="text-base sm:text-lg text-textLight/95 leading-relaxed font-normal whitespace-pre-line tracking-wide word-keep">
-            기도제목 데이터를 불러오는 중입니다...
+            기도제목을 불러오는 중입니다...
           </p>
         </div>
 
-        <!-- 카드 하단 타이머 -->
         <div id="card-footer-box" class="pt-2.5 border-t border-accentNavy/40 flex items-center justify-between text-xs text-textLight/70">
           <div class="flex items-center space-x-1.5">
             <i class="fa-regular fa-clock text-tealAccent"></i>
@@ -344,7 +343,6 @@
     </div>
   </div>
 
-  <!-- JavaScript 로직 -->
   <script>
     const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec";
 
@@ -423,21 +421,6 @@
       "\"내 영혼아 여호와를 송축하라 내 속에 있는 것들아 다 그의 거룩한 이름을 송축하라\" (시 103:1)"
     ];
 
-    const MOCK_DATA = {
-      members: [
-        { id: 1, name: "김은혜", role: "권사", group: "봄길_서태범", date: "2026.08.15", type: "이번달 집중", content: "1. 자녀의 대학 입시와 믿음의 진로를 위해 기도합니다.\n2. 남편 사업장의 경제적 어려움이 회복되게 하소서." },
-        { id: 2, name: "박철민", role: "집사", group: "1남전도회_곽윤필", date: "2026.08.16", type: "응답시까지 지속", content: "1. 직장 내 직분자로서 빛과 소금의 역할을 감당하게 하소서.\n2. 양가 부모님의 건강과 영혼 구원을 위해 간구합니다." },
-        { id: 3, name: "이새롬", role: "성도", group: "기타", date: "2026.08.20", type: "이번달 집중", content: "1. 교회에 잘 정착하고 믿음의 동역자들을 만나게 하소서.\n2. 영육 간의 평안을 위해 기도합니다." }
-      ],
-      patients: [
-        { id: 101, name: "전안례", role: "권사", date: "2026.08.10", type: "암 수술 후 회복중", content: "건강히 잘 회복되도록" }
-      ],
-      missions: [
-        { id: 201, name: "필리핀", role: "윤성호/허유실 선교사", date: "2026.08.01", type: "선교사", content: "1. 선교지 사역 가운데 성령의 기름 부으심이 넘치도록\n2. 가정과 자녀들의 영육 간 강건함을 위해" },
-        { id: 202, name: "가지교회", role: "고재만 목사", date: "2026.08.01", type: "동역교회", content: "1. 교회의 영적 부흥과 지역 사회를 섬기는 복음의 통로가 되도록\n2. 성도들의 가정이 믿음 안에서 든든히 세워지도록" }
-      ]
-    };
-
     const WEEKDAYS_KO = ["", "월", "화", "수", "목", "금"];
 
     function getTodayWeekday() {
@@ -446,12 +429,19 @@
       return 1;
     }
 
+    // 로컬 스토리지에 캐시된 데이터가 있으면 즉시 복원 (로딩 시간 0초 달성)
+    const cachedDataStr = localStorage.getItem('mimyeong_cached_data');
+    let initialData = null;
+    try {
+      if (cachedDataStr) initialData = JSON.parse(cachedDataStr);
+    } catch(e) {}
+
     let state = {
       groupKey: localStorage.getItem('mimyeong_auth_key') || '',
       currentWeekday: getTodayWeekday(),
       apiUrl: DEFAULT_API_URL,
       category: 'member',
-      data: MOCK_DATA,
+      data: initialData || { members: [], patients: [], missions: [] },
       activeList: [],
       currentIndex: 0,
       timerSeconds: 120,
@@ -472,6 +462,7 @@
     const elBibleVerse = document.getElementById('header-bible-verse');
     const elLandscapeVerse = document.getElementById('landscape-bible-verse');
     const elTabMemberTitle = document.getElementById('tab-member-title');
+    const elSyncSpinner = document.getElementById('sync-spinner');
 
     async function initApp() {
       setupEventListeners();
@@ -485,10 +476,14 @@
         updateHeaderInfo();
       }
 
-      if (state.apiUrl) {
-        await fetchDataFromGAS();
-      } else {
+      // 로컬 캐시가 있으면 즉시 첫 화면을 그림 (체감 대기시간 0초)
+      if (state.data && (state.data.members.length || state.data.patients.length || state.data.missions.length)) {
         filterDataByRotation();
+      }
+
+      // 백그라운드에서 최신 데이터 무소음 동기화 실행
+      if (state.apiUrl) {
+        fetchDataFromGAS();
       }
 
       startTimer();
@@ -629,7 +624,6 @@
       elCounter.textContent = `${state.currentIndex + 1} / ${state.activeList.length}`;
       elContent.textContent = item.content || "";
 
-      // 한 줄(Inline) 통합 타이포그래피
       if (item.type === '선교사') {
         elName.textContent = item.role || "선교사 가정";
         const country = item.name ? item.name.replace(/선교지/g, '').trim() : "";
@@ -696,18 +690,22 @@
       updateRandomBibleVerse();
     }
 
+    // 백그라운드 무소음 초고속 데이터 갱신 (SWR 패턴)
     async function fetchDataFromGAS() {
+      if (elSyncSpinner) elSyncSpinner.classList.remove('hidden');
       try {
         const res = await fetch(state.apiUrl);
         const json = await res.json();
         if (json && (json.members || json.patients || json.missions)) {
           state.data = json;
+          // 가져온 최신 데이터를 스마트폰 로컬 스토리지에 캐시 저장
+          localStorage.setItem('mimyeong_cached_data', JSON.stringify(json));
           filterDataByRotation();
         }
       } catch (err) {
-        console.warn("API 연동 실패. 기본 목업 데이터를 사용합니다.", err);
-        state.data = MOCK_DATA;
-        filterDataByRotation();
+        console.warn("데이터 동기화 실패 (오프라인/기존 캐시 유지)", err);
+      } finally {
+        if (elSyncSpinner) elSyncSpinner.classList.add('hidden');
       }
     }
 
