@@ -346,52 +346,52 @@
   <script>
     const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbwJX7ZwbVcSWRIinbhkwEz4fL95IIpCK-DbMeW_osljtsZKSpoUHsz8zVSkpg4JV8kuFA/exec";
 
-    // 소그룹 및 교역자 PIN 설정 (박태한 목사는 전체 성도 전원 순환 설정)
+    // 소그룹 및 교역자 설정 (PIN은 Apps Script 서버에서만 확인합니다)
     const GROUP_CONFIG = {
-      "PASTOR_PARK": { name: "박태한 목사", type: "pastor", pastorIdx: 0, allMembers: true, pin: "0000" },
-      "PASTOR_CHOI": { name: "최호민 목사", type: "pastor", pastorIdx: 1, allMembers: false, pin: "0000" },
-      "PASTOR_HO":   { name: "박호준 목사", type: "pastor", pastorIdx: 2, allMembers: false, pin: "0000" },
+      "PASTOR_PARK": { name: "박태한 목사", type: "pastor", pastorIdx: 0, allMembers: true },
+      "PASTOR_CHOI": { name: "최호민 목사", type: "pastor", pastorIdx: 1, allMembers: false },
+      "PASTOR_HO":   { name: "박호준 목사", type: "pastor", pastorIdx: 2, allMembers: false },
 
-      "G_1_MALE":    { name: "1남전도회_곽윤필",   type: "group", groupName: "1남전도회",   pin: "1001" },
-      "G_2_MALE":    { name: "2남전도회_최운재",   type: "group", groupName: "2남전도회",   pin: "1002" },
-      "G_SPRING":    { name: "봄길_서태범",       type: "group", groupName: "봄길",       pin: "1003" },
-      "G_FREEDOM":   { name: "주안에 자유_시희덕", type: "group", groupName: "주안에 자유", pin: "1004" },
-      "G_SHARON":    { name: "샤론_장군자",       type: "group", groupName: "샤론",       pin: "1005" },
-      "G_HARMONY":   { name: "화음_장수자",       type: "group", groupName: "화음",       pin: "1006" },
-      "G_IMMANUEL":  { name: "임마누엘_이화묵",   type: "group", groupName: "임마누엘",   pin: "1007" },
-      "G_EBENEZER":  { name: "에벤에셀_김영애",   type: "group", groupName: "에벤에셀",   pin: "1008" },
-      "G_EIRENE":    { name: "에이레네_이순종",   type: "group", groupName: "에이레네",   pin: "1009" },
-      "G_SHALOM":    { name: "샬롬_백영자",       type: "group", groupName: "샬롬",       pin: "1010" },
-      "G_FRAGRANCE": { name: "향기_이금지",       type: "group", groupName: "향기",       pin: "1011" },
-      "G_FORGET":    { name: "물망초_원봉선",     type: "group", groupName: "물망초",     pin: "1012" },
-      "G_WATERED":   { name: "물댄동산_김현정",   type: "group", groupName: "물댄동산",   pin: "1013" },
-      "G_REFRESH":   { name: "상큼이_김지나",     type: "group", groupName: "상큼이",     pin: "1014" },
-      "G_ETC":       { name: "기타(새가족/미배정)", type: "group", groupName: "기타",       pin: "1015" }
+      "G_1_MALE":    { name: "1남전도회_곽윤필",   type: "group", groupName: "1남전도회" },
+      "G_2_MALE":    { name: "2남전도회_최운재",   type: "group", groupName: "2남전도회" },
+      "G_SPRING":    { name: "봄길_서태범",       type: "group", groupName: "봄길" },
+      "G_FREEDOM":   { name: "주안에 자유_시희덕", type: "group", groupName: "주안에 자유" },
+      "G_SHARON":    { name: "샤론_장군자",       type: "group", groupName: "샤론" },
+      "G_HARMONY":   { name: "화음_장수자",       type: "group", groupName: "화음" },
+      "G_IMMANUEL":  { name: "임마누엘_이화묵",   type: "group", groupName: "임마누엘" },
+      "G_EBENEZER":  { name: "에벤에셀_김영애",   type: "group", groupName: "에벤에셀" },
+      "G_EIRENE":    { name: "에이레네_이순종",   type: "group", groupName: "에이레네" },
+      "G_SHALOM":    { name: "샬롬_백영자",       type: "group", groupName: "샬롬" },
+      "G_FRAGRANCE": { name: "향기_이금지",       type: "group", groupName: "향기" },
+      "G_FORGET":    { name: "물망초_원봉선",     type: "group", groupName: "물망초" },
+      "G_WATERED":   { name: "물댄동산_김현정",   type: "group", groupName: "물댄동산" },
+      "G_REFRESH":   { name: "상큼이_김지나",     type: "group", groupName: "상큼이" },
+      "G_ETC":       { name: "기타(새가족/미배정)", type: "group", groupName: "기타" }
     };
 
     const BIBLE_VERSES = [
       "\"새벽 아직도 밝기 전에 예수께서 일어나 나가 한적한 곳으로 가사 거기서 기도하시더니\" (막 1:35)",
       "\"여호와여 아침에 주께서 나의 소리를 들으시리니 아침에 내가 주께 기도하고 바라리이다\" (시 5:3)",
-      "\"아무 것도 염려하지 말고 다만 모든 일에 기도와 간구로 하나님께 아뢰라\" (빌 4:6)",
-      "\"너는 내게 부르짖으라 내가 네게 응답하겠고 크고 은밀한 일을 네게 보이리라\" (렘 33:3)",
+      "\"아무 것도 염려하지 말고 다만 모든 일에 기도와 간구로, 너희 구할 것을 감사함으로 하나님께 아뢰라\" (빌 4:6)",
+      "\"너는 내게 부르짖으라 내가 네게 응답하겠고 네가 알지 못하는 크고 은밀한 일을 네게 보이리라\" (렘 33:3)",
       "\"의인의 간구는 역사하는 힘이 큼이니라\" (약 5:16)",
-      "\"하나님이 그 성중에 계시매 흔들리지 아니할 것이라 새벽에 하나님이 도우시리로다\" (시 46:5)",
-      "\"구하라 그리하면 너희에게 주실 것이요 찾으라 찾아낼 것이요 문을 두드리라 열릴 것이니\" (마 7:7)",
-      "\"너희가 내 안에 거하고 내 말이 너희 안에 거하면 무엇이든지 원하는 대로 구하라 이루리라\" (요 15:7)",
+      "\"하나님이 그 성 중에 계시매 성이 흔들리지 아니할 것이라 새벽에 하나님이 도우시리로다\" (시 46:5)",
+      "\"구하라 그리하면 너희에게 주실 것이요 찾으라 그리하면 찾아낼 것이요 문을 두드리라 그리하면 너희에게 열릴 것이니\" (마 7:7)",
+      "\"너희가 내 안에 거하고 내 말이 너희 안에 거하면 무엇이든지 원하는 대로 구하라 그리하면 이루리라\" (요 15:7)",
       "\"아침에 나로 하여금 주의 인자한 말씀을 듣게 하소서 내가 주를 의뢰함이니이다\" (시 143:8)",
-      "\"모든 기도와 간구를 하되 항상 성령 안에서 기도하고 깨어 구하기를 힘쓰라\" (엡 6:18)",
+      "\"모든 기도와 간구를 하되 항상 성령 안에서 기도하고 이를 위하여 깨어 구하기를 항상 힘쓰며 여러 성도를 위하여 구하라\" (엡 6:18)",
       "\"내 영광아 깰지어다 비파야, 수금아, 깰지어다 내가 새벽을 깨우리로다\" (시 57:8)",
       "\"무엇이든지 기도하고 구하는 것은 받은 줄로 믿으라 그리하면 너희에게 그대로 되리라\" (막 11:24)",
-      "\"우리는 때를 따라 돕는 은혜를 얻기 위하여 은혜의 보좌 앞에 담대히 나아갈 것이니라\" (히 4:16)",
+      "\"그러므로 우리는 긍휼하심을 받고 때를 따라 돕는 은혜를 얻기 위하여 은혜의 보좌 앞에 담대히 나아갈 것이니라\" (히 4:16)",
       "\"백성들아 시시로 그를 의지하고 그의 앞에 마음을 토하라 하나님은 우리의 피난처시로다\" (시 62:8)",
-      "\"성령도 우리의 연약함을 도우시나니 말할 수 없는 탄식으로 친히 간구하시느니라\" (롬 8:26)",
+      "\"이와 같이 성령도 우리의 연약함을 도우시나니 우리는 마땅히 기도할 바를 알지 못하나 오직 성령이 말할 수 없는 탄식으로 우리를 위하여 친히 간구하시느니라\" (롬 8:26)",
       "\"두세 사람이 내 이름으로 모인 곳에는 나도 그들 중에 있느니라\" (마 18:20)",
-      "\"엘리야가 기도한즉 하늘이 비를 주고 땅이 열매를 맺었느니라\" (약 5:18)",
-      "\"너희 중에 누구든지 지혜가 부족하거든 모든 사람에게 후히 주시는 하나님께 구하라\" (약 1:5)",
+      "\"다시 기도하니 하늘이 비를 주고 땅이 열매를 맺었느니라\" (약 5:18)",
+      "\"너희 중에 누구든지 지혜가 부족하거든 모든 사람에게 후히 주시고 꾸짖지 아니하시는 하나님께 구하라 그리하면 주시리라\" (약 1:5)",
       "\"주의 말씀은 내 발에 등이요 내 길에 빛이니이다\" (시 119:105)",
-      "\"내 이름으로 일컫는 내 백성이 기도하여 내 얼굴을 찾으면 내가 그 죄를 사하리라\" (대하 7:14)",
-      "\"쉬지 말고 기도하라 범사에 감사하라 이것이 너희를 향하신 하나님의 뜻이니라\" (살전 5:17-18)",
-      "\"주를 바라는 자들은 수치를 당하지 아니하리로다\" (시 25:3)",
+      "\"내 이름으로 일컫는 내 백성이 그들의 악한 길에서 떠나 스스로 낮추고 기도하여 내 얼굴을 찾으면 내가 하늘에서 듣고 그들의 죄를 사하고 그들의 땅을 고칠지라\" (대하 7:14)",
+      "\"쉬지 말고 기도하라 범사에 감사하라 이것이 그리스도 예수 안에서 너희를 향하신 하나님의 뜻이니라\" (살전 5:17-18)",
+      "\"주를 바라는 자들은 수치를 당하지 아니하려니와 까닭 없이 속이는 자들은 수치를 당하리이다\" (시 25:3)",
       "\"환난 날에 나를 부르라 내가 너를 건지리니 네가 나를 영화롭게 하리로다\" (시 50:15)",
       "\"기도를 계속하고 기도에 감사함으로 깨어 있으라\" (골 4:2)",
       "\"내가 여호와를 기다리고 기다렸더니 귀를 기울이사 나의 부르짖음을 들으셨도다\" (시 40:1)",
@@ -402,21 +402,21 @@
       "\"두려워하지 말라 내가 너와 함께 함이라 놀라지 말라 나는 네 하나님이 됨이라\" (사 41:10)",
       "\"너는 마음을 다하여 여호와를 신뢰하고 네 명철을 의지하지 말라\" (잠 3:5)",
       "\"너의 길을 여호와께 맡기라 그를 의지하면 그가 이루시고\" (시 37:5)",
-      "\"평안을 너희에게 끼치노니 곧 나의 평안을 너희에게 주노라 마음에 근심하지 말라\" (요 14:27)",
+      "\"평안을 너희에게 끼치노니 곧 나의 평안을 너희에게 주노라 내가 너희에게 주는 것은 세상이 주는 것과 같지 아니하니라 너희는 마음에 근심하지도 말고 두려워하지도 말라\" (요 14:27)",
       "\"수고하고 무거운 짐 진 자들아 다 내게로 오라 내가 너희를 쉬게 하리라\" (마 11:28)",
       "\"사람이 마음으로 자기의 길을 계획할지라도 그의 걸음을 인도하시는 이는 여호와시니라\" (잠 16:9)",
       "\"하나님은 우리의 피난처시요 힘이시니 환난 중에 만날 큰 도움이시라\" (시 46:1)",
       "\"내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라\" (빌 4:13)",
-      "\"주 여호와께서는 자기 백성의 부르짖음을 들으시고 그들의 모든 환난에서 건지셨도다\" (시 34:17)",
-      "\"주의 인자하심이 아침마다 새롭고 웅대하시니이다\" (애 3:23)",
-      "\"여호와는 네게 복을 주시고 너를 지키시기를 원하며 은혜 베푸시기를 원하노라\" (민 6:24-25)",
+      "\"의인이 부르짖으매 여호와께서 들으시고 그들의 모든 환난에서 건지셨도다\" (시 34:17)",
+      "\"이것들이 아침마다 새로우니 주의 성실하심이 크시도소이다\" (애 3:23)",
+      "\"여호와는 네게 복을 주시고 너를 지키시기를 원하며 여호와는 그의 얼굴을 네게 비추사 은혜 베푸시기를 원하며\" (민 6:24-25)",
       "\"믿음의 기도는 병든 자를 구원하리니 주께서 그를 일으키시리라\" (약 5:15)",
       "\"오직 의인은 믿음으로 말미암아 살리라\" (롬 1:17)",
       "\"너희는 가만히 있어 내가 하나님 됨을 알지어다\" (시 46:10)",
-      "\"주의 손이 나와 함께 하사 나로 환난을 벗어나 내게 근심이 없게 하옵소서\" (대상 4:10)",
+      "\"주께서 내게 복을 주시려거든 나의 지역을 넓히시고 주의 손으로 나를 도우사 나로 환난을 벗어나 내게 근심이 없게 하옵소서\" (대상 4:10)",
       "\"여호와를 기뻐하라 그가 네 마음의 소원을 네게 이루어 주시리로다\" (시 37:4)",
-      "\"우리가 알거니와 하나님을 사랑하는 자들에게는 모든 것이 합력하여 선을 이루느니라\" (롬 8:28)",
-      "\"내가 새벽 날개를 치며 바다 끝에 가서 거주할지라도 주의 손이 나를 인도하시리이다\" (시 139:9-10)",
+      "\"우리가 알거니와 하나님을 사랑하는 자 곧 그의 뜻대로 부르심을 입은 자들에게는 모든 것이 합력하여 선을 이루느니라\" (롬 8:28)",
+      "\"내가 새벽 날개를 치며 바다 끝에 가서 거주할지라도 거기서도 주의 손이 나를 인도하시며 주의 오른손이 나를 붙드시리이다\" (시 139:9-10)",
       "\"여호와는 나의 빛이요 나의 구원이시니 내가 누구를 두려워하리요\" (시 27:1)",
       "\"너희 염려를 다 주께 맡기라 이는 그가 너희를 돌보심이라\" (벧전 5:7)",
       "\"내 영혼아 여호와를 송축하라 내 속에 있는 것들아 다 그의 거룩한 이름을 송축하라\" (시 103:1)"
@@ -430,7 +430,9 @@
       return 1;
     }
 
-    // 캐시 복원 (더미 데이터 완전 제거)
+    // 캐시 복원 (PIN 확인을 마친 기기에서만)
+    const savedPin = localStorage.getItem('mimyeong_pin') || '';
+    if (!savedPin) localStorage.removeItem('mimyeong_cached_data');
     const cachedDataStr = localStorage.getItem('mimyeong_cached_data');
     let initialData = { members: [], patients: [], missions: [] };
     try {
@@ -439,6 +441,7 @@
 
     let state = {
       groupKey: localStorage.getItem('mimyeong_auth_key') || '',
+      pin: savedPin,
       currentWeekday: getTodayWeekday(),
       apiUrl: DEFAULT_API_URL,
       category: 'member',
@@ -470,7 +473,7 @@
       updateWeekdayUI();
       updateRandomBibleVerse();
 
-      if (!state.groupKey || !GROUP_CONFIG[state.groupKey]) {
+      if (!state.groupKey || !GROUP_CONFIG[state.groupKey] || !state.pin) {
         openLoginModal();
       } else {
         closeLoginModal();
@@ -481,7 +484,7 @@
         filterDataByRotation();
       }
 
-      if (state.apiUrl) {
+      if (state.apiUrl && state.pin) {
         fetchDataFromGAS();
       }
 
@@ -501,20 +504,43 @@
       document.getElementById('modal-login').classList.add('hidden');
     }
 
-    function handleLoginSubmit() {
+    async function handleLoginSubmit() {
       const selectedKey = document.getElementById('select-group-key').value;
       const enteredPin = document.getElementById('input-group-pin').value.trim();
-      const config = GROUP_CONFIG[selectedKey];
+      const elError = document.getElementById('pin-error-msg');
+      elError.classList.add('hidden');
 
-      if (config && config.pin === enteredPin) {
+      try {
+        const json = await requestData(selectedKey, enteredPin);
+        if (!json || json.status === 'unauthorized') {
+          elError.textContent = '비밀번호가 일치하지 않습니다.';
+          elError.classList.remove('hidden');
+          return;
+        }
+
         state.groupKey = selectedKey;
+        state.pin = enteredPin;
+        state.data = json;
         localStorage.setItem('mimyeong_auth_key', selectedKey);
+        localStorage.setItem('mimyeong_pin', enteredPin);
+        localStorage.setItem('mimyeong_cached_data', JSON.stringify(json));
         closeLoginModal();
         updateHeaderInfo();
         filterDataByRotation();
-      } else {
-        document.getElementById('pin-error-msg').classList.remove('hidden');
+      } catch (err) {
+        elError.textContent = '서버에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.';
+        elError.classList.remove('hidden');
       }
+    }
+
+    // PIN이 바뀌었거나 틀린 경우: 저장된 정보와 기도제목을 지우고 다시 로그인
+    function resetLogin() {
+      state.pin = '';
+      state.data = { members: [], patients: [], missions: [] };
+      localStorage.removeItem('mimyeong_pin');
+      localStorage.removeItem('mimyeong_cached_data');
+      filterDataByRotation();
+      openLoginModal();
     }
 
     function updateHeaderInfo() {
@@ -594,14 +620,8 @@
           }
           state.activeList = rotated;
         } else {
-          const filtered = rawList.filter(item => {
-            const g = (item.group || "").trim();
-            if (config.groupName === "기타") {
-              return !g || g === "기타" || g === "새가족" || g === "미배정" || g === "전체";
-            }
-            return g && (g === config.groupName || g.indexOf(config.groupName) !== -1);
-          });
-          state.activeList = filtered;
+          // 서버가 이미 해당 소그룹 기도제목만 보내줌
+          state.activeList = rawList;
         }
       }
 
@@ -693,11 +713,21 @@
       updateRandomBibleVerse();
     }
 
+    // 서버에서 PIN을 확인한 뒤 해당 소그룹 데이터만 받아옴
+    async function requestData(key, pin) {
+      const url = `${state.apiUrl}?key=${encodeURIComponent(key)}&pin=${encodeURIComponent(pin)}`;
+      const res = await fetch(url);
+      return res.json();
+    }
+
     async function fetchDataFromGAS() {
       if (elSyncSpinner) elSyncSpinner.classList.remove('hidden');
       try {
-        const res = await fetch(state.apiUrl);
-        const json = await res.json();
+        const json = await requestData(state.groupKey, state.pin);
+        if (json && json.status === 'unauthorized') {
+          resetLogin();
+          return;
+        }
         if (json && (json.members || json.patients || json.missions)) {
           state.data = json;
           localStorage.setItem('mimyeong_cached_data', JSON.stringify(json));
