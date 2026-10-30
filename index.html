@@ -207,7 +207,7 @@
     </div>
 
     <!-- 터치 감지 영역 (전체 화면 터치 최적화) -->
-    <div id="card-touch-zone" class="relative w-full flex-1 min-h-[360px] sm:min-h-[420px] flex flex-col justify-center items-center cursor-pointer select-none py-1">
+    <div id="card-touch-zone" class="relative w-full grow shrink-0 basis-auto min-h-[360px] sm:min-h-[420px] flex flex-col justify-start items-center cursor-pointer select-none py-1">
       
       <div class="absolute left-0 top-0 bottom-0 w-[30%] z-20 opacity-0 hover:opacity-10 transition-opacity bg-tealAccent/20 rounded-l-2xl flex items-center justify-start pl-2 pointer-events-none">
         <i class="fa-solid fa-chevron-left text-2xl text-brightAqua"></i>
@@ -217,7 +217,7 @@
       </div>
 
       <!-- 실제 기도 카드 -->
-      <div id="prayer-card" class="w-full h-full bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative pointer-events-auto">
+      <div id="prayer-card" class="w-full flex-1 bg-cardDark/95 border-2 border-accentNavy/60 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col justify-between transition-all duration-300 relative pointer-events-auto">
         
         <div id="card-header-wrapper" class="border-b border-accentNavy/40 pb-2.5 mb-2.5">
           <div class="flex items-center justify-between mb-2">
@@ -240,7 +240,7 @@
           </div>
         </div>
 
-        <div id="card-body-scroll" class="overflow-y-auto max-h-[240px] sm:max-h-[300px] py-1 pr-1 my-1">
+        <div id="card-body-scroll" class="flex-1 py-1 pr-1 my-1">
           <p id="card-content" class="text-base sm:text-lg text-textLight/95 leading-relaxed font-normal whitespace-pre-line tracking-wide word-keep">
             데이터를 동기화하고 있습니다. 잠시만 기다려 주세요.
           </p>
